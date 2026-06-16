@@ -730,6 +730,180 @@ input,textarea{font-family:var(--font)}
 </head>
 <body>
 
+<!-- Landing page -->
+<div id="landing-screen" style="display:none;min-height:100vh;background:var(--bg)">
+  <!-- Nav -->
+  <nav style="position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)">
+    <div style="max-width:1100px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between">
+      <div style="display:flex;align-items:center;gap:10px">
+        <img src="logo.jpg" alt="Sales Sparring" style="height:44px">
+      </div>
+      <div style="display:flex;align-items:center;gap:20px">
+        <a href="#how" style="font-size:0.82rem;font-weight:500;color:var(--text2);text-decoration:none">How it works</a>
+        <a href="#pricing" style="font-size:0.82rem;font-weight:500;color:var(--text2);text-decoration:none">Pricing</a>
+        <button class="btn btn-ghost btn-sm" onclick="showLogin()">Sign In</button>
+        <button class="btn btn-primary btn-sm" onclick="showLogin(true)">Get Started Free</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <div style="max-width:1100px;margin:0 auto;padding:80px 32px 60px;text-align:center">
+    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--accent-light);border:1px solid var(--accent-border);border-radius:20px;padding:6px 16px;font-size:0.74rem;font-weight:600;color:var(--accent);margin-bottom:24px">
+      <span style="width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite"></span>
+      AI-powered sales practice
+    </div>
+    <h1 style="font-size:3.2rem;font-weight:900;letter-spacing:-0.04em;line-height:1.1;margin-bottom:20px;color:var(--text)">
+      Practice cold calls<br>against AI buyers.
+    </h1>
+    <p style="font-size:1.15rem;color:var(--text2);line-height:1.6;margin-bottom:36px;max-width:580px;margin-left:auto;margin-right:auto">
+      Make realistic sales calls to AI prospects who push back, raise objections, and test your skills. Get scored instantly.
+    </p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:16px">
+      <button class="btn btn-primary btn-lg" style="font-size:1rem;padding:16px 32px" onclick="showLogin(true)">Start Practicing Free</button>
+      <button class="btn btn-ghost btn-lg" style="font-size:1rem;padding:16px 32px" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">See How It Works</button>
+    </div>
+    <p style="font-size:0.78rem;color:var(--text3)">No credit card required · 15 free minutes every month</p>
+  </div>
+
+  <!-- Stats bar -->
+  <div style="max-width:900px;margin:0 auto;padding:0 32px 80px">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;text-align:center">
+      <div>
+        <div style="font-size:2rem;font-weight:900;color:var(--accent);font-family:var(--mono)">29+</div>
+        <div style="font-size:0.82rem;color:var(--text2);font-weight:500">Realistic scenarios</div>
+      </div>
+      <div>
+        <div style="font-size:2rem;font-weight:900;color:var(--accent);font-family:var(--mono)">20+</div>
+        <div style="font-size:0.82rem;color:var(--text2);font-weight:500">Unique AI buyer voices</div>
+      </div>
+      <div>
+        <div style="font-size:2rem;font-weight:900;color:var(--accent);font-family:var(--mono)">4</div>
+        <div style="font-size:0.82rem;color:var(--text2);font-weight:500">Difficulty levels</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- How it works -->
+  <div id="how" style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:80px 0">
+    <div style="max-width:1000px;margin:0 auto;padding:0 32px">
+      <h2 style="font-size:2rem;font-weight:900;letter-spacing:-0.03em;text-align:center;margin-bottom:12px">How it works</h2>
+      <p style="font-size:1rem;color:var(--text2);text-align:center;margin-bottom:48px">Three steps. That's it.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px">
+        <div style="text-align:center">
+          <div style="width:56px;height:56px;border-radius:16px;background:var(--accent-light);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          </div>
+          <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:6px">Pick a prospect</h3>
+          <p style="font-size:0.84rem;color:var(--text2);line-height:1.5">Choose from 29+ realistic scenarios — SaaS, real estate, insurance, healthcare, and more.</p>
+        </div>
+        <div style="text-align:center">
+          <div style="width:56px;height:56px;border-radius:16px;background:var(--accent-light);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg>
+          </div>
+          <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:6px">Make the call</h3>
+          <p style="font-size:0.84rem;color:var(--text2);line-height:1.5">Talk to a live AI buyer. They respond in real-time, push back, interrupt, and test your pitch.</p>
+        </div>
+        <div style="text-align:center">
+          <div style="width:56px;height:56px;border-radius:16px;background:var(--accent-light);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;margin:0 auto 16px">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+          </div>
+          <h3 style="font-size:1.05rem;font-weight:700;margin-bottom:6px">Get scored</h3>
+          <p style="font-size:0.84rem;color:var(--text2);line-height:1.5">Instant scorecard on opening, discovery, objections, value, and closing. Plus full transcript.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Feature highlights -->
+  <div style="max-width:1000px;margin:0 auto;padding:80px 32px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center">
+      <div>
+        <h2 style="font-size:1.8rem;font-weight:900;letter-spacing:-0.03em;margin-bottom:16px">Real conversations. Real pushback.</h2>
+        <p style="font-size:0.95rem;color:var(--text2);line-height:1.6;margin-bottom:24px">Our AI buyers don't read scripts. They react to what you say — get annoyed when you're generic, lean in when you hit a nerve, and hang up if you're bad enough.</p>
+        <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:12px">
+          <li style="display:flex;align-items:center;gap:10px;font-size:0.88rem;color:var(--text)"><span style="color:var(--green)">✓</span> Live voice calls with AI</li>
+          <li style="display:flex;align-items:center;gap:10px;font-size:0.88rem;color:var(--text)"><span style="color:var(--green)">✓</span> Real-time coaching during calls</li>
+          <li style="display:flex;align-items:center;gap:10px;font-size:0.88rem;color:var(--text)"><span style="color:var(--green)">✓</span> Post-call scorecard with 6 metrics</li>
+          <li style="display:flex;align-items:center;gap:10px;font-size:0.88rem;color:var(--text)"><span style="color:var(--green)">✓</span> Save your own products & pitches</li>
+          <li style="display:flex;align-items:center;gap:10px;font-size:0.88rem;color:var(--text)"><span style="color:var(--green)">✓</span> Track progress over time</li>
+        </ul>
+      </div>
+      <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:24px;box-shadow:var(--shadow-lg)">
+        <div style="background:#09090b;border-radius:14px;padding:20px;color:#fff">
+          <div style="font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:#4d94ff;margin-bottom:6px">Post-Call Analysis</div>
+          <div style="font-size:0.8rem;color:rgba(255,255,255,0.5);margin-bottom:16px">Scenario: Cloud CRM Platform</div>
+          <div style="text-align:center;margin-bottom:20px">
+            <div style="display:inline-flex;align-items:center;justify-content:center;width:80px;height:80px;border-radius:50%;background:rgba(52,211,153,0.1);border:2px solid #34d399;font-size:2.2rem;font-weight:900;color:#34d399">B+</div>
+            <div style="font-size:1.4rem;font-weight:800;margin-top:8px">78<span style="font-size:0.9rem;color:rgba(255,255,255,0.4)">/100</span></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:0.72rem;color:rgba(255,255,255,0.6);width:90px">Opening</span><div style="flex:1;height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden"><div style="height:100%;width:80%;background:#34d399;border-radius:3px"></div></div><span style="font-size:0.68rem;font-family:var(--mono);color:rgba(255,255,255,0.5)">12/15</span></div>
+            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:0.72rem;color:rgba(255,255,255,0.6);width:90px">Discovery</span><div style="flex:1;height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden"><div style="height:100%;width:75%;background:#60a5fa;border-radius:3px"></div></div><span style="font-size:0.68rem;font-family:var(--mono);color:rgba(255,255,255,0.5)">19/25</span></div>
+            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:0.72rem;color:rgba(255,255,255,0.6);width:90px">Objections</span><div style="flex:1;height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden"><div style="height:100%;width:60%;background:#fbbf24;border-radius:3px"></div></div><span style="font-size:0.68rem;font-family:var(--mono);color:rgba(255,255,255,0.5)">12/20</span></div>
+            <div style="display:flex;align-items:center;gap:10px"><span style="font-size:0.72rem;color:rgba(255,255,255,0.6);width:90px">Closing</span><div style="flex:1;height:5px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden"><div style="height:100%;width:85%;background:#34d399;border-radius:3px"></div></div><span style="font-size:0.68rem;font-family:var(--mono);color:rgba(255,255,255,0.5)">13/15</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pricing -->
+  <div id="pricing" style="background:var(--surface);border-top:1px solid var(--border);padding:80px 0">
+    <div style="max-width:900px;margin:0 auto;padding:0 32px">
+      <h2 style="font-size:2rem;font-weight:900;letter-spacing:-0.03em;text-align:center;margin-bottom:12px">Simple pricing</h2>
+      <p style="font-size:1rem;color:var(--text2);text-align:center;margin-bottom:48px">Start free. Upgrade when you're ready.</p>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:700px;margin:0 auto">
+        <!-- Free -->
+        <div style="background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-xl);padding:32px;text-align:center">
+          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text3);margin-bottom:8px">Free</div>
+          <div style="font-size:2.4rem;font-weight:900;letter-spacing:-0.03em;margin-bottom:4px">$0</div>
+          <div style="font-size:0.78rem;color:var(--text3);margin-bottom:24px">15 minutes / month</div>
+          <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;text-align:left;margin-bottom:28px">
+            <li style="font-size:0.82rem;color:var(--text2);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--green)">✓</span> 3 practice calls / month</li>
+            <li style="font-size:0.82rem;color:var(--text2);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--green)">✓</span> All scenarios unlocked</li>
+            <li style="font-size:0.82rem;color:var(--text2);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--green)">✓</span> Full scorecard</li>
+            <li style="font-size:0.82rem;color:var(--text2);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--green)">✓</span> Call history</li>
+          </ul>
+          <button class="btn btn-ghost" style="width:100%" onclick="showLogin(true)">Get Started Free</button>
+        </div>
+        <!-- Pro -->
+        <div id="pricing-pro-card" style="background:var(--surface);border:2px solid var(--accent);border-radius:var(--radius-xl);padding:32px;text-align:center;position:relative;box-shadow:0 8px 30px rgba(0,102,255,0.08)">
+          <div style="position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--accent);color:#fff;font-size:0.62rem;font-weight:700;padding:4px 14px;border-radius:10px;text-transform:uppercase;letter-spacing:0.06em">Most Popular</div>
+          <div style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--accent);margin-bottom:8px">Pro</div>
+          <div style="font-size:2.4rem;font-weight:900;letter-spacing:-0.03em;margin-bottom:4px">$29<span style="font-size:1rem;font-weight:500;color:var(--text3)">/mo</span></div>
+          <div style="font-size:0.78rem;color:var(--text3);margin-bottom:24px" id="pricing-pro-minutes">150 minutes / month</div>
+          <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;text-align:left;margin-bottom:28px">
+            <li style="font-size:0.82rem;color:var(--text);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--green)">✓</span> Everything in Free</li>
+            <li style="font-size:0.82rem;color:var(--text);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--green)">✓</span> Unlimited scenarios</li>
+            <li style="font-size:0.82rem;color:var(--text);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--green)">✓</span> Save custom pitches</li>
+            <li style="font-size:0.82rem;color:var(--text);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--green)">✓</span> Live coaching during calls</li>
+            <li style="font-size:0.82rem;color:var(--text);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--green)">✓</span> Analytics & progress tracking</li>
+            <li style="font-size:0.82rem;color:var(--text);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--green)">✓</span> Priority support</li>
+          </ul>
+          <button class="btn btn-primary" style="width:100%" onclick="showLogin(true)">Start Free Trial</button>
+        </div>
+      </div>
+      <p style="font-size:0.78rem;color:var(--text3);text-align:center;margin-top:24px">All plans include full transcripts, scorecards, and scenario access. Cancel anytime.</p>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div style="max-width:700px;margin:0 auto;padding:80px 32px;text-align:center">
+    <h2 style="font-size:2rem;font-weight:900;letter-spacing:-0.03em;margin-bottom:12px">Ready to sharpen your pitch?</h2>
+    <p style="font-size:1rem;color:var(--text2);margin-bottom:28px">Join reps practicing right now. Your first 15 minutes are free.</p>
+    <button class="btn btn-primary btn-lg" style="font-size:1.05rem;padding:18px 40px" onclick="showLogin(true)">Get Started Free →</button>
+  </div>
+
+  <!-- Footer -->
+  <footer style="border-top:1px solid var(--border);padding:32px;text-align:center">
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px">
+      <img src="logo.jpg" alt="Sales Sparring" style="height:36px">
+    </div>
+    <p style="font-size:0.76rem;color:var(--text3)">© 2026 Sales Sparring. Practice makes perfect.</p>
+  </footer>
+</div>
+
 <!-- Login screen -->
 <div id="login-screen" style="display:none;min-height:100vh;align-items:center;justify-content:center;background:#fff">
   <div style="width:100%;max-width:380px;padding:32px">
@@ -932,6 +1106,7 @@ window.handleAuth = async function(){
 };
 
 function showApp(){
+  document.getElementById('landing-screen').style.display = 'none';
   document.getElementById('login-screen').style.display = 'none';
   document.getElementById('app-shell').style.display = 'flex';
   ensureUser();
@@ -954,9 +1129,15 @@ async function ensureUser(){
   } catch(e) { console.error('ensureUser error:', e); }
 }
 
-function showLogin(){
+function showLogin(fromLanding){
+  document.getElementById('landing-screen').style.display = 'none';
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('app-shell').style.display = 'none';
+  if(fromLanding){
+    isSignUp = true;
+    document.getElementById('auth-submit').textContent = 'Create Account';
+    document.getElementById('auth-toggle').textContent = 'Sign in';
+  }
 }
 
 // Check existing session on load
@@ -966,7 +1147,10 @@ async function initAuth(){
     currentUser = session.user;
     showApp();
   } else {
-    showLogin();
+    // Show landing page for non-authenticated users
+    document.getElementById('landing-screen').style.display = 'block';
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('app-shell').style.display = 'none';
   }
 }
 
