@@ -860,7 +860,7 @@ input,textarea{font-family:var(--font)}
           <div style="font-size:2.4rem;font-weight:900;letter-spacing:-0.03em;margin-bottom:4px">$0</div>
           <div style="font-size:0.78rem;color:var(--text3);margin-bottom:24px">15 minutes / month</div>
           <ul style="list-style:none;padding:0;display:flex;flex-direction:column;gap:8px;text-align:left;margin-bottom:28px">
-            <li style="font-size:0.82rem;color:var(--text2);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--green)">✓</span> 3 practice calls / month</li>
+            <li style="font-size:0.82rem;color:var(--text2);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--green)">✓</span> ~3 practice calls / month</li>
             <li style="font-size:0.82rem;color:var(--text2);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--green)">✓</span> All scenarios unlocked</li>
             <li style="font-size:0.82rem;color:var(--text2);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--green)">✓</span> Full scorecard</li>
             <li style="font-size:0.82rem;color:var(--text2);padding-left:20px;position:relative"><span style="position:absolute;left:0;color:var(--green)">✓</span> Call history</li>
@@ -1278,7 +1278,7 @@ function startCountdownTimer(){
     if(remaining <= 0){
       if(callTimerInterval) clearInterval(callTimerInterval);
       if(countdownInterval) clearInterval(countdownInterval);
-      log('Time's up! Call ended.','sys');
+      log("Time's up! Call ended.",'sys');
       endCall();
     } else if(remaining === 30){
       log('30 seconds remaining...','sys');
