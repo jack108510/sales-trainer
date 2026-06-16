@@ -47,7 +47,7 @@
 }
 
 *{margin:0;padding:0;box-sizing:border-box}
-html{-webkit-font-smoothing:antialiased}
+html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
 body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.5;overflow-x:hidden}
 button{font-family:var(--font);cursor:pointer}
 input,textarea{font-family:var(--font)}
@@ -639,6 +639,21 @@ input,textarea{font-family:var(--font)}
   .pitches-grid{display:block}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   .analytics-grid{grid-template-columns:1fr}
+  /* Landing page mobile */
+  #landing-screen nav div{padding:14px 20px !important}
+  #landing-nav-links a{display:none !important}
+  #landing-nav-links button{padding:6px 12px !important;font-size:0.72rem !important}
+  #landing-screen [style*="max-width:1100px;margin:0 auto;padding:80px 32px 60px;text-align:center"]{padding:48px 20px 32px !important}
+  #landing-screen h1[style*="3.2rem"]{font-size:2rem !important;line-height:1.15 !important}
+  #landing-screen p[style*="1.15rem"]{font-size:0.95rem !important}
+  /* Stats mobile */
+  #landing-screen [style*="grid-template-columns:repeat(3,1fr);gap:32px;text-align:center"]{grid-template-columns:1fr !important;gap:20px !important}
+  /* How it works mobile */
+  #landing-screen #how [style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:1fr !important;gap:32px !important}
+  /* Feature highlights mobile */
+  #landing-screen [style*="grid-template-columns:1fr 1fr;gap:48px"]{grid-template-columns:1fr !important;gap:32px !important}
+  /* Pricing mobile */
+  #pricing [style*="grid-template-columns:1fr 1fr;gap:24px;max-width:700px"]{grid-template-columns:1fr !important}
 }
 
 /* ===== LEARN: SCENARIO CARDS ===== */
@@ -736,9 +751,9 @@ input,textarea{font-family:var(--font)}
   <nav style="position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)">
     <div style="max-width:1100px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between">
       <div style="display:flex;align-items:center;gap:10px">
-        <img src="logo.jpg" alt="Sales Sparring" style="height:44px">
+        <img src="logo.jpg" alt="Sales Sparring" style="height:36px">
       </div>
-      <div style="display:flex;align-items:center;gap:20px">
+      <div id="landing-nav-links" style="display:flex;align-items:center;gap:20px">
         <a href="#how" style="font-size:0.82rem;font-weight:500;color:var(--text2);text-decoration:none">How it works</a>
         <a href="#pricing" style="font-size:0.82rem;font-weight:500;color:var(--text2);text-decoration:none">Pricing</a>
         <button class="btn btn-ghost btn-sm" onclick="showLogin()">Sign In</button>
@@ -898,7 +913,7 @@ input,textarea{font-family:var(--font)}
   <!-- Footer -->
   <footer style="border-top:1px solid var(--border);padding:32px;text-align:center">
     <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px">
-      <img src="logo.jpg" alt="Sales Sparring" style="height:36px">
+      <img src="logo.jpg" alt="Sales Sparring" style="height:32px">
     </div>
     <p style="font-size:0.76rem;color:var(--text3)">© 2026 Sales Sparring. Practice makes perfect.</p>
   </footer>
@@ -909,7 +924,7 @@ input,textarea{font-family:var(--font)}
   <div style="width:100%;max-width:380px;padding:32px">
     <div style="text-align:center;margin-bottom:32px">
       <div style="display:inline-flex;align-items:center;gap:10px;margin-bottom:16px">
-        <img src="logo.jpg" alt="Sales Sparring" style="height:200px">
+        <img src="logo.jpg" alt="Sales Sparring" style="height:48px">
       </div>
       <h1 style="font-size:1.5rem;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px">Sign in to practice</h1>
       <p style="font-size:0.84rem;color:var(--text2)">Your calls, scores, and progress — saved everywhere.</p>
@@ -924,6 +939,18 @@ input,textarea{font-family:var(--font)}
         <input id="auth-password" type="password" placeholder="••••••••" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:0.88rem;background:var(--surface);color:var(--text);outline:none" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
       </div>
       <button id="auth-submit" class="btn btn-primary" style="width:100%;padding:12px;font-size:0.9rem" onclick="handleAuth()">Sign In</button>
+      <div style="text-align:center;margin-top:10px">
+        <a href="#" onclick="handlePasswordReset();return false" style="font-size:0.74rem;color:var(--text3);text-decoration:none">Forgot password?</a>
+      </div>
+      <div style="text-align:center;margin:16px 0 12px;display:flex;align-items:center;gap:12px">
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+        <span style="font-size:0.7rem;color:var(--text3);font-weight:500">or</span>
+        <div style="flex:1;height:1px;background:var(--border)"></div>
+      </div>
+      <button class="btn btn-ghost" style="width:100%;padding:11px;font-size:0.84rem;display:flex;align-items:center;justify-content:center;gap:8px" onclick="handleGoogleAuth()">
+        <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+        Continue with Google
+      </button>
       <div style="text-align:center;margin-top:14px">
         <span style="font-size:0.78rem;color:var(--text3)">Don't have an account? <a href="#" onclick="toggleAuthMode()" style="color:var(--accent);font-weight:600;text-decoration:none" id="auth-toggle">Sign up</a></span>
       </div>
@@ -936,7 +963,7 @@ input,textarea{font-family:var(--font)}
 <!-- Mobile header -->
 <div class="mobile-header">
   <button class="hamburger" onclick="toggleSidebar()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
-  <span style="font-weight:800;font-size:0.9rem"><img src="logo.jpg" alt="Sales Sparring" style="height:88px"></span>
+  <span style="font-weight:800;font-size:0.9rem"><img src="logo.jpg" alt="Sales Sparring" style="height:36px"></span>
   <div style="width:22px"></div>
 </div>
 <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -945,7 +972,7 @@ input,textarea{font-family:var(--font)}
 <!-- Sidebar -->
 <nav class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <img src="logo.jpg" alt="Sales Sparring" style="height:96px">
+    <img src="logo.jpg" alt="Sales Sparring" style="height:40px">
   </div>
   <div class="sidebar-nav">
     <div class="nav-item active" data-tab="practice" onclick="switchTab('practice')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>Practice</div>
@@ -1073,6 +1100,7 @@ window.handleAuth = async function(){
   const password = document.getElementById('auth-password').value;
   const errEl = document.getElementById('auth-error');
   const succEl = document.getElementById('auth-success');
+  const btn = document.getElementById('auth-submit');
   errEl.style.display = 'none';
   succEl.style.display = 'none';
 
@@ -1082,15 +1110,19 @@ window.handleAuth = async function(){
     return;
   }
 
+  btn.disabled = true;
+  btn.textContent = 'Please wait...';
+
   try{
     let result;
     if(isSignUp){
       result = await sb.auth.signUp({ email, password });
       if(result.error) throw result.error;
-      // Check if confirmation required
       if(result.data.user && !result.data.session){
         succEl.textContent = 'Check your email for a confirmation link.';
         succEl.style.display = 'block';
+        btn.disabled = false;
+        btn.textContent = 'Create Account';
         return;
       }
     } else {
@@ -1101,6 +1133,40 @@ window.handleAuth = async function(){
     showApp();
   } catch(e) {
     errEl.textContent = e.message || 'Authentication failed.';
+    errEl.style.display = 'block';
+    btn.disabled = false;
+    btn.textContent = isSignUp ? 'Create Account' : 'Sign In';
+  }
+};
+
+window.handleGoogleAuth = async function(){
+  try{
+    const { error } = await sb.auth.signInWithOAuth({ provider: 'google', options: { redirectTo: window.location.href } });
+    if(error) throw error;
+  }catch(e){
+    const errEl = document.getElementById('auth-error');
+    errEl.textContent = e.message;
+    errEl.style.display = 'block';
+  }
+};
+
+window.handlePasswordReset = async function(){
+  const email = document.getElementById('auth-email').value.trim();
+  if(!email){
+    const errEl = document.getElementById('auth-error');
+    errEl.textContent = 'Enter your email above first, then click forgot password.';
+    errEl.style.display = 'block';
+    return;
+  }
+  try{
+    const { error } = await sb.auth.resetPasswordForEmail(email, { redirectTo: window.location.href });
+    const succEl = document.getElementById('auth-success');
+    if(error) throw error;
+    succEl.textContent = 'Password reset link sent to ' + email;
+    succEl.style.display = 'block';
+  }catch(e){
+    const errEl = document.getElementById('auth-error');
+    errEl.textContent = e.message;
     errEl.style.display = 'block';
   }
 };
