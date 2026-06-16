@@ -1,0 +1,18 @@
+{
+  "name": "Sales Sparring",
+  "short_name": "Sales Sparring",
+  "description": "Practice cold calls against realistic AI buyers.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0066ff",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "logo.jpg",
+      "sizes": "1024x1024",
+      "type": "image/jpeg",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -2,10 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Sales Sparring — AI Sales Call Practice</title>
 <meta name="description" content="Practice cold calls against realistic AI buyers. Get scored. Get better.">
+<meta name="theme-color" content="#0066ff">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Sales Sparring">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="icon" href="logo.jpg">
+<link rel="apple-touch-icon" href="logo.jpg">
+<link rel="manifest" href="manifest.webmanifest">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
@@ -1240,6 +1246,10 @@ const sb = window.supabase.createClient(SB_URL, SB_KEY);
 let currentUser = null;
 let isSignUp = false;
 
+function isNativeIOS(){
+  return window.Capacitor?.isNativePlatform?.() && window.Capacitor?.getPlatform?.() === 'ios';
+}
+
 async function authJsonHeaders(){
   const { data: { session } } = await sb.auth.getSession();
   return {
@@ -2347,6 +2357,10 @@ function renderSettings(){
   const pct = total > 0 ? Math.round((remaining / total) * 100) : 0;
   const mins = Math.floor(remaining / 60);
   const secs = Math.floor(remaining % 60);
+  const upgradeButton = isNativeIOS()
+    ? '<button class="btn btn-primary" onclick="handleUpgrade()">Upgrade in App Store →</button>'
+    : '<button class="btn btn-primary" onclick="handleUpgrade()">Upgrade to Pro →</button>';
+  const upgradeCta = isNativeIOS() ? 'Start Pro' : 'Start Pro Free Trial';
   
   el.innerHTML=`
     <div class="settings-section">
@@ -2357,7 +2371,7 @@ function renderSettings(){
             <div style="font-size:1.1rem;font-weight:800;text-transform:capitalize">${plan} Plan</div>
             <div style="font-size:0.82rem;color:var(--text2);margin-top:2px">${plan==='free'?'Upgrade for more practice time':'Renews monthly'}</div>
           </div>
-          ${plan==='free'?'<button class="btn btn-primary" onclick="handleUpgrade()">Upgrade to Pro →</button>':'<button class="btn btn-ghost" onclick="handleManageSubscription()">Manage Subscription</button>'}
+          ${plan==='free'?upgradeButton:'<button class="btn btn-ghost" onclick="handleManageSubscription()">Manage Subscription</button>'}
         </div>
         
         <div style="background:var(--surface3);border-radius:14px;padding:20px;margin-bottom:16px">
@@ -2381,7 +2395,7 @@ function renderSettings(){
             <li>✓ Analytics & progress tracking</li>
             <li>✓ Cancel anytime</li>
           </ul>
-          <button class="btn btn-primary" style="width:100%" onclick="handleUpgrade()">Start Pro Free Trial</button>
+          <button class="btn btn-primary" style="width:100%" onclick="handleUpgrade()">${upgradeCta}</button>
         </div>
         ` : ''}
       </div>
@@ -2426,6 +2440,10 @@ function renderSettings(){
 
 window.handleUpgrade = async function(){
   if(!currentUser) return;
+  if(isNativeIOS()){
+    alert('App Store subscriptions are next. This build is ready for the iOS shell; StoreKit needs to be connected before TestFlight.');
+    return;
+  }
   try{
     const resp = await fetch(EDGE_BASE+'/stripe-checkout',{
       method:'POST',
