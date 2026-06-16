@@ -1001,6 +1001,81 @@ let callStartTime = null;
 let youTalkSeconds = 0;
 let buyerTalkSeconds = 0;
 let currentSpeaker = null;
+// ===== DYNAMIC VOICE MATCHING =====
+// Maps persona traits to the best available voice
+const VOICE_LIBRARY = {
+  femaleWarm: ['11labs-Kate','11labs-Grace','11labs-Lily'],
+  femaleSharp: ['11labs-Marissa','11labs-Tamsin','11labs-Chloe'],
+  femaleYoung: ['11labs-Evie','11labs-Anna','11labs-Jenny'],
+  femaleMature: ['11labs-Susan','11labs-Julie','11labs-Della'],
+  maleWarm: ['11labs-John','11labs-Ethan','11labs-Steve'],
+  maleGruff: ['11labs-Nico','11labs-Billy','11labs-Brian'],
+  maleYoung: ['11labs-Paul','11labs-Ryan','11labs-Anthony'],
+  maleMature: ['11labs-Merritt','11labs-Lucas','11labs-Gilfoy'],
+  regionalTX: ['cartesia-Dallas'],
+};
+
+function matchVoiceToPersona(scenario) {
+  const text = [
+    scenario.buyer || '',
+    scenario.buyerPersona || '',
+    scenario.company || '',
+    scenario.companyDesc || '',
+    scenario.painPoints || ''
+  ].join(' ').toLowerCase();
+
+  const buyerName = (scenario.buyer || '').split(',')[0].trim();
+  const femaleNames = ['sarah','priya','rebecca','linda','denise','samantha','maya','rachel','lisa','victoria','ava','catherine','kate','emma','jenny','anna','chloe','tamsin','della','grace','lily','marissa','julie','susan'];
+  const maleNames = ['marcus','james','tom','mike','jake','al','frank','marco','danny','bill','tony','kevin','scott','billy','brian','ethan','paul','ryan','anthony','john','nico','steve','lucas','gilfoy','merritt'];
+
+  const firstName = buyerName.split(' ')[0].toLowerCase().replace(/[^a-z]/g,'');
+  let gender = null;
+  if (femaleNames.includes(firstName)) gender = 'female';
+  else if (maleNames.includes(firstName)) gender = 'male';
+
+  if (!gender) {
+    const femCues = /\b(she|her|hers|woman|female|ms|mrs)\b/;
+    const maleCues = /\b(he|him|his|man|male|mr)\b/;
+    if (femCues.test(text) && !maleCues.test(text)) gender = 'female';
+    else if (maleCues.test(text) && !femCues.test(text)) gender = 'male';
+  }
+
+  if (!gender) {
+    const hash = scenario.id ? scenario.id.split('').reduce((a,c)=>a+c.charCodeAt(0),0) : 0;
+    gender = hash % 2 === 0 ? 'female' : 'male';
+  }
+
+  let ageGroup = 'mid';
+  if (/young|early career|first|new|recently hired|startup|millennial|gen z|internet sales manager/.test(text)) ageGroup = 'young';
+  if (/old-school|30 years|veteran|founded|built the company|legacy|former|established|25-year|40 year|been with the company 15 years|pga pro/.test(text)) ageGroup = 'mature';
+
+  let intensity = 'warm';
+  if (/gruff|tough|no-nonsense|texan|blue-collar|practical|direct|blunt|ruthless|intimidat/.test(text)) intensity = 'gruff';
+  if (/polished|mba|corporate|guarded|skeptical|analytical|detail-oriented|data-driven|ambitious|sharp/.test(text)) intensity = 'sharp';
+
+  let region = null;
+  if (/texas|texan|dallas|houston|fort worth|bbq|southern|drawl/.test(text)) region = 'TX';
+
+  let candidates = [];
+  if (region === 'TX' && gender === 'male') {
+    candidates = VOICE_LIBRARY.regionalTX;
+  } else if (gender === 'female') {
+    if (ageGroup === 'young') candidates = VOICE_LIBRARY.femaleYoung;
+    else if (ageGroup === 'mature') candidates = VOICE_LIBRARY.femaleMature;
+    else if (intensity === 'sharp') candidates = VOICE_LIBRARY.femaleSharp;
+    else candidates = VOICE_LIBRARY.femaleWarm;
+  } else {
+    if (intensity === 'gruff') candidates = VOICE_LIBRARY.maleGruff;
+    else if (ageGroup === 'young') candidates = VOICE_LIBRARY.maleYoung;
+    else if (ageGroup === 'mature') candidates = VOICE_LIBRARY.maleMature;
+    else candidates = VOICE_LIBRARY.maleWarm;
+  }
+
+  const chosen = candidates[0] || '11labs-Kate';
+  console.log('[VoiceMatch]', {firstName, gender, ageGroup, intensity, region, chosen});
+  return chosen;
+}
+
 let currentScenario = null;
 let coachingInterval = null;
 let lastCoachingLength = 0;
@@ -2076,7 +2151,7 @@ window.startCall = async function(){
       headers:{'Content-Type':'application/json','Authorization':'Bearer '+RETELL_KEY},
       body:JSON.stringify({
         agent_id:RETELL_AGENT,
-        voice_id:s.voice||undefined,
+        voice_id:matchVoiceToPersona(s)||s.voice||undefined,
         retell_llm_dynamic_variables:{
           product:s.product,company_name:s.company,company_description:s.companyDesc,
           buyer_persona:s.buyer+'. Personality: '+s.buyerPersona,
