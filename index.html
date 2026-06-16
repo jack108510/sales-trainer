@@ -11,7 +11,7 @@
 <style>
 /* ===== SALES SPARRING — CLEAN REBUILD ===== */
 :root{
-  --bg:#fafafa;
+  --bg:#f7f8fb;
   --surface:#ffffff;
   --surface2:#f5f5f5;
   --surface3:#eeeeee;
@@ -35,6 +35,8 @@
   --purple:#805ad5;
   --purple-light:#faf5ff;
   --blue:#3182ce;
+  --ink:#0b1220;
+  --steel:#667085;
   --radius:10px;
   --radius-lg:14px;
   --radius-xl:18px;
@@ -48,26 +50,33 @@
 
 *{margin:0;padding:0;box-sizing:border-box}
 html{-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
-body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.5;overflow-x:hidden}
+body{font-family:var(--font);background:linear-gradient(180deg,#fbfcff 0%,var(--bg) 420px);color:var(--text);line-height:1.5;overflow-x:hidden}
 button{font-family:var(--font);cursor:pointer}
 input,textarea{font-family:var(--font)}
 
+/* ===== BRAND ===== */
+.brand-lockup{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text)}
+.brand-mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#075dff,#00398f);box-shadow:0 10px 24px rgba(0,102,255,.18);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:.76rem;letter-spacing:0}
+.brand-name{font-size:.95rem;font-weight:900;letter-spacing:-.03em;line-height:.9;color:var(--ink)}
+.brand-name span{display:block;color:var(--accent)}
+.brand-mini{width:30px;height:30px;border-radius:9px;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:.68rem}
+
 /* ===== LAYOUT ===== */
-.app{display:flex;min-height:100vh}
+.app{display:flex;min-height:100vh;background:var(--bg)}
 
 /* ===== SIDEBAR ===== */
-.sidebar{width:220px;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s ease}
-.sidebar-logo{padding:20px 18px 20px 44px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.sidebar{width:244px;background:rgba(255,255,255,.92);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .25s ease;backdrop-filter:blur(14px)}
+.sidebar-logo{padding:18px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);min-height:72px}
 .sidebar-logo-icon{width:28px;height:28px;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center}
 .sidebar-logo-icon svg{width:16px;height:16px;color:#fff}
 .sidebar-logo-text{font-size:0.92rem;font-weight:800;letter-spacing:-0.02em;color:var(--text)}
-.sidebar-nav{flex:1;padding:10px 8px}
-.nav-item{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:8px;font-size:0.82rem;font-weight:500;color:var(--text2);cursor:pointer;transition:all .12s;margin-bottom:2px}
-.nav-item:hover{background:var(--surface2);color:var(--text)}
-.nav-item.active{background:var(--accent-light);color:var(--accent);font-weight:600}
+.sidebar-nav{flex:1;padding:12px 10px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;font-size:0.84rem;font-weight:650;color:var(--text2);cursor:pointer;transition:all .12s;margin-bottom:4px}
+.nav-item:hover{background:#f2f6ff;color:var(--text)}
+.nav-item.active{background:linear-gradient(135deg,#eaf2ff,#f7fbff);color:var(--accent);font-weight:800;box-shadow:inset 0 0 0 1px rgba(0,102,255,.12)}
 .nav-item svg{width:17px;height:17px;flex-shrink:0;opacity:.6}
 .nav-item.active svg{opacity:1}
-.sidebar-footer{padding:12px 16px;border-top:1px solid var(--border)}
+.sidebar-footer{padding:14px 16px;border-top:1px solid var(--border)}
 .xp-display{padding:4px 0}
 .xp-level{font-size:0.68rem;color:var(--text3);display:flex;justify-content:space-between;margin-bottom:4px}
 .xp-level-name{color:var(--text);font-weight:600}
@@ -75,7 +84,7 @@ input,textarea{font-family:var(--font)}
 .xp-bar{height:100%;background:var(--accent);border-radius:2px;transition:width .5s}
 
 /* ===== MAIN CONTENT ===== */
-.main{flex:1;margin-left:220px;min-height:100vh}
+.main{flex:1;margin-left:244px;min-height:100vh}
 .page{display:none;padding:0;max-width:100%;animation:none}
 .page.active{display:block}
 
@@ -87,6 +96,123 @@ input,textarea{font-family:var(--font)}
 .hero h1{font-size:2.2rem;font-weight:900;letter-spacing:-0.04em;line-height:1.15;margin-bottom:10px;color:var(--text)}
 .hero p{font-size:1.05rem;color:var(--text2);line-height:1.6;margin-bottom:32px;max-width:540px}
 .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:40px}
+
+/* ===== LANDING ===== */
+.landing-shell{display:none;min-height:100vh;background:linear-gradient(180deg,#ffffff 0%,#f7faff 54%,#ffffff 100%)}
+.landing-nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.88);backdrop-filter:blur(14px);border-bottom:1px solid rgba(229,229,229,.8)}
+.landing-nav-inner{max-width:1120px;margin:0 auto;padding:13px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.landing-links{display:flex;align-items:center;gap:18px}
+.landing-links a{font-size:.83rem;font-weight:650;color:var(--text2);text-decoration:none}
+.landing-links a:hover{color:var(--accent)}
+.landing-hero{max-width:1120px;margin:0 auto;padding:76px 28px 50px;text-align:center}
+.landing-kicker{display:inline-flex;align-items:center;gap:7px;background:#eef5ff;border:1px solid #bfd8ff;border-radius:999px;padding:7px 15px;font-size:.74rem;font-weight:800;color:var(--accent);margin-bottom:22px}
+.landing-kicker::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(0,102,255,.1)}
+.landing-title{font-size:3.45rem;font-weight:950;letter-spacing:-.04em;line-height:1.02;color:var(--ink);max-width:790px;margin:0 auto 18px}
+.landing-copy{font-size:1.08rem;color:#515b6b;line-height:1.65;max-width:650px;margin:0 auto 30px}
+.landing-actions{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.landing-note{font-size:.78rem;color:var(--text3)}
+.landing-preview{max-width:960px;margin:36px auto 0;background:#0b1220;border:1px solid rgba(11,18,32,.14);border-radius:22px;padding:14px;box-shadow:0 24px 70px rgba(15,23,42,.18);text-align:left}
+.preview-bar{height:36px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:7px;padding:0 8px}
+.preview-dot{width:9px;height:9px;border-radius:50%;background:#64748b}
+.preview-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;padding:16px}
+.preview-call{background:#ffffff;border-radius:14px;padding:18px;min-height:250px}
+.preview-call-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.preview-buyer{display:flex;align-items:center;gap:10px}
+.preview-avatar{width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#fed7aa,#bfdbfe)}
+.preview-line{height:10px;border-radius:8px;background:#e5e7eb;margin:10px 0}
+.preview-line.short{width:66%}
+.preview-line.blue{background:#dbeafe}
+.preview-score{background:#111827;border-radius:14px;padding:18px;color:#fff}
+.preview-grade{width:86px;height:86px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(52,211,153,.1);border:2px solid #34d399;color:#34d399;font-size:2.4rem;font-weight:950;margin:8px auto 14px}
+.preview-score-row{display:grid;grid-template-columns:84px 1fr 42px;gap:10px;align-items:center;margin:10px 0;font-size:.72rem;color:rgba(255,255,255,.68)}
+.preview-track{height:6px;border-radius:4px;background:rgba(255,255,255,.08);overflow:hidden}
+.preview-fill{height:100%;border-radius:4px;background:#60a5fa}
+.landing-stats{max-width:920px;margin:0 auto;padding:0 28px 74px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.landing-stat{background:#fff;border:1px solid var(--border);border-radius:16px;padding:20px;text-align:center;box-shadow:var(--shadow-sm)}
+.landing-stat-value{font-size:2rem;font-weight:950;color:var(--accent);font-family:var(--mono)}
+.landing-stat-label{font-size:.82rem;color:var(--text2);font-weight:650}
+.landing-band{background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:74px 0}
+.landing-section{max-width:1040px;margin:0 auto;padding:0 28px}
+.landing-section-title{font-size:2rem;font-weight:950;letter-spacing:-.03em;text-align:center;margin-bottom:10px;color:var(--ink)}
+.landing-section-copy{font-size:1rem;color:var(--text2);text-align:center;margin-bottom:42px}
+.step-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.step-card{background:#fff;border:1px solid var(--border);border-radius:16px;padding:24px;box-shadow:var(--shadow-sm)}
+.step-icon{width:44px;height:44px;border-radius:12px;background:var(--accent-light);border:1px solid var(--accent-border);display:flex;align-items:center;justify-content:center;margin-bottom:16px;color:var(--accent)}
+.step-card h3{font-size:1rem;font-weight:850;margin-bottom:8px;color:var(--ink)}
+.step-card p{font-size:.84rem;color:var(--text2);line-height:1.55}
+.feature-split{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center;max-width:1040px;margin:0 auto;padding:74px 28px}
+.feature-copy h2{font-size:1.9rem;font-weight:950;letter-spacing:-.03em;margin-bottom:14px;color:var(--ink)}
+.feature-copy p{font-size:.96rem;color:var(--text2);line-height:1.65;margin-bottom:22px}
+.feature-list{list-style:none;display:flex;flex-direction:column;gap:11px}
+.feature-list li{font-size:.88rem;color:var(--text);display:flex;align-items:center;gap:10px}
+.feature-list li::before{content:'+';width:19px;height:19px;border-radius:50%;background:var(--green-light);color:var(--green);display:inline-flex;align-items:center;justify-content:center;font-weight:900}
+.landing-pricing{background:var(--surface);border-top:1px solid var(--border);padding:74px 0}
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:760px;margin:0 auto}
+.pricing-card{background:#fff;border:1px solid var(--border);border-radius:18px;padding:30px;text-align:left;box-shadow:var(--shadow-sm);position:relative}
+.pricing-card.featured{border:2px solid var(--accent);box-shadow:0 16px 38px rgba(0,102,255,.12)}
+.pricing-pill{position:absolute;top:-13px;left:28px;background:var(--accent);color:#fff;font-size:.62rem;font-weight:850;padding:5px 12px;border-radius:999px;text-transform:uppercase;letter-spacing:.06em}
+.pricing-label{font-size:.72rem;font-weight:850;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:8px}
+.pricing-card.featured .pricing-label{color:var(--accent)}
+.pricing-price{font-size:2.35rem;font-weight:950;letter-spacing:-.03em;color:var(--ink)}
+.pricing-price span{font-size:.95rem;font-weight:600;color:var(--text3)}
+.pricing-sub{font-size:.8rem;color:var(--text3);margin:3px 0 22px}
+.pricing-list{list-style:none;display:flex;flex-direction:column;gap:9px;margin-bottom:26px}
+.pricing-list li{font-size:.84rem;color:var(--text2);display:flex;gap:9px;align-items:flex-start}
+.pricing-list li::before{content:'✓';color:var(--green);font-weight:900}
+.landing-cta{max-width:720px;margin:0 auto;padding:74px 28px;text-align:center}
+.landing-cta h2{font-size:2rem;font-weight:950;letter-spacing:-.03em;margin-bottom:12px;color:var(--ink)}
+.landing-cta p{font-size:1rem;color:var(--text2);margin-bottom:26px}
+.landing-footer{border-top:1px solid var(--border);padding:28px;text-align:center;color:var(--text3);font-size:.76rem;background:#fff}
+
+/* ===== AUTH ===== */
+.auth-screen{display:none;min-height:100vh;align-items:center;justify-content:center;background:radial-gradient(circle at top,#eef5ff 0,#fff 44%);padding:24px}
+.auth-card{width:100%;max-width:410px;background:#fff;border:1px solid var(--border);border-radius:22px;padding:30px;box-shadow:0 20px 60px rgba(15,23,42,.12)}
+.auth-header{text-align:center;margin-bottom:26px}
+.auth-header .brand-lockup{justify-content:center;margin-bottom:18px}
+.auth-title{font-size:1.55rem;font-weight:950;letter-spacing:-.03em;margin-bottom:6px;color:var(--ink)}
+.auth-copy{font-size:.85rem;color:var(--text2)}
+.auth-field{margin-bottom:14px}
+.auth-label{display:block;font-size:.72rem;font-weight:750;color:var(--text2);margin-bottom:6px}
+.auth-input{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:12px;font-size:.9rem;background:var(--surface);color:var(--text);outline:none;transition:border-color .15s,box-shadow .15s}
+.auth-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(0,102,255,.1)}
+.auth-link{font-size:.74rem;color:var(--text3);text-decoration:none}
+.auth-link:hover{color:var(--accent)}
+.auth-divider{margin:16px 0 12px;display:flex;align-items:center;gap:12px}
+.auth-divider::before,.auth-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.auth-divider span{font-size:.7rem;color:var(--text3);font-weight:600}
+.auth-toggle{text-align:center;margin-top:14px;font-size:.78rem;color:var(--text3)}
+.auth-toggle a{color:var(--accent);font-weight:800;text-decoration:none}
+.auth-message{display:none;margin-top:12px;padding:10px 14px;border-radius:12px;font-size:.78rem}
+.auth-message.error{background:var(--red-light);border:1px solid rgba(229,62,62,.2);color:var(--red)}
+.auth-message.success{background:var(--green-light);border:1px solid rgba(56,161,105,.2);color:var(--green)}
+
+/* ===== PRACTICE SURFACE ===== */
+.practice-top{max-width:1120px;margin:0 auto;padding:44px 48px 18px}
+.practice-hero-row{display:flex;justify-content:space-between;gap:24px;align-items:flex-end;margin-bottom:18px}
+.practice-eyebrow{font-size:.68rem;font-weight:850;color:var(--accent);text-transform:uppercase;letter-spacing:.12em;margin-bottom:6px}
+.practice-title{font-size:2rem;font-weight:950;letter-spacing:-.035em;color:var(--ink);line-height:1.08}
+.practice-subtitle{font-size:.95rem;color:var(--text2);margin-top:7px;max-width:560px}
+.practice-actions{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.metric-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.metric-tile{background:#fff;border:1px solid var(--border);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow-sm)}
+.metric-label{font-size:.62rem;font-weight:850;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:5px}
+.metric-value{font-size:1.15rem;font-weight:900;color:var(--ink)}
+.metric-note{font-size:.74rem;color:var(--text2);margin-top:2px}
+.scenario-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;max-width:1120px;margin:0 auto;padding:8px 48px 64px}
+.scenario-card-mini{background:#fff;border:1px solid var(--border);border-radius:16px;padding:18px;cursor:pointer;transition:transform .16s,box-shadow .16s,border-color .16s;box-shadow:var(--shadow-sm);min-height:238px;display:flex;flex-direction:column}
+.scenario-card-mini:hover{border-color:var(--accent-border);box-shadow:0 14px 34px rgba(15,23,42,.1);transform:translateY(-2px)}
+.scenario-card-top{display:flex;align-items:center;gap:12px;margin-bottom:15px}
+.scenario-avatar{width:46px;height:46px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid #fed7aa;background:#fff}
+.scenario-avatar img{width:100%;height:100%;object-fit:cover}
+.scenario-person{font-size:.9rem;font-weight:850;color:var(--ink)}
+.scenario-company{font-size:.77rem;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:190px}
+.scenario-difficulty{margin-left:auto;font-size:.58rem;font-weight:850;text-transform:uppercase;letter-spacing:.07em;padding:4px 8px;border-radius:999px;background:var(--surface2);color:var(--text3)}
+.scenario-title{font-size:1.03rem;font-weight:900;letter-spacing:-.015em;color:var(--ink);margin-bottom:4px}
+.scenario-seller{font-size:.78rem;color:var(--accent);font-weight:750;margin-bottom:9px}
+.scenario-goal{font-size:.8rem;color:var(--text2);line-height:1.48;flex:1}
+.scenario-card-foot{display:flex;align-items:center;justify-content:space-between;margin-top:16px;padding-top:13px;border-top:1px solid var(--border);font-size:.74rem;color:var(--text3)}
+.scenario-start{color:var(--accent);font-weight:850}
+.scenario-best{font-weight:800;color:var(--green)}
 
 /* ===== BUTTONS ===== */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:10px 20px;border-radius:var(--radius);font-size:0.84rem;font-weight:600;border:none;transition:all .15s;text-decoration:none;white-space:nowrap}
@@ -591,7 +717,7 @@ input,textarea{font-family:var(--font)}
 .hamburger svg{width:22px;height:22px}
 @media(min-width:1024px){
   /* Desktop enhancements */
-  .scenario-grid{grid-template-columns:repeat(3,1fr);max-width:1100px}
+  .scenario-grid{grid-template-columns:repeat(3,1fr);max-width:1120px}
   .hero{max-width:1100px;padding:60px 64px 40px}
   .hero h1{font-size:2.6rem}
   #learning-path{max-width:800px;padding:20px 64px 80px}
@@ -623,13 +749,19 @@ input,textarea{font-family:var(--font)}
   .sidebar.open{transform:translateX(0)}
   .main{margin-left:0;padding-top:52px}
   .mobile-header{display:flex}
+  .brand-mark{width:31px;height:31px}
+  .brand-name{font-size:.86rem}
   .call-layout{grid-template-columns:1fr}
   .hero{padding:32px 20px 24px}
   .hero h1{font-size:1.6rem}
   #learning-path{padding:20px 20px 60px}
   #tab-practice>div:first-child{padding:32px 20px 8px}
   #tab-practice>div:first-child h1{font-size:1.5rem}
-  .scenario-grid{padding:0 20px 40px}
+  .practice-top{padding:28px 20px 14px}
+  .practice-hero-row{display:block}
+  .practice-actions{justify-content:flex-start;margin-top:16px}
+  .metric-strip{grid-template-columns:1fr;gap:8px}
+  .scenario-grid{padding:8px 20px 44px;grid-template-columns:1fr}
   .scenario-detail{padding:24px 16px 40px}
   .page-header{padding:24px 20px 16px}
   .sc-body{padding:20px}
@@ -639,21 +771,22 @@ input,textarea{font-family:var(--font)}
   .pitches-grid{display:block}
   .stats-grid{grid-template-columns:repeat(2,1fr)}
   .analytics-grid{grid-template-columns:1fr}
-  /* Landing page mobile */
-  #landing-screen nav div{padding:14px 20px !important}
-  #landing-nav-links a{display:none !important}
-  #landing-nav-links button{padding:6px 12px !important;font-size:0.72rem !important}
-  #landing-screen [style*="max-width:1100px;margin:0 auto;padding:80px 32px 60px;text-align:center"]{padding:48px 20px 32px !important}
-  #landing-screen h1[style*="3.2rem"]{font-size:2rem !important;line-height:1.15 !important}
-  #landing-screen p[style*="1.15rem"]{font-size:0.95rem !important}
-  /* Stats mobile */
-  #landing-screen [style*="grid-template-columns:repeat(3,1fr);gap:32px;text-align:center"]{grid-template-columns:1fr !important;gap:20px !important}
-  /* How it works mobile */
-  #landing-screen #how [style*="grid-template-columns:repeat(3,1fr)"]{grid-template-columns:1fr !important;gap:32px !important}
-  /* Feature highlights mobile */
-  #landing-screen [style*="grid-template-columns:1fr 1fr;gap:48px"]{grid-template-columns:1fr !important;gap:32px !important}
-  /* Pricing mobile */
-  #pricing [style*="grid-template-columns:1fr 1fr;gap:24px;max-width:700px"]{grid-template-columns:1fr !important}
+  .landing-nav-inner{padding:12px 18px}
+  .landing-links a{display:none}
+  .landing-links{gap:8px}
+  .landing-links .btn{padding:7px 11px;font-size:.72rem}
+  .landing-hero{padding:48px 20px 34px}
+  .landing-title{font-size:2.18rem;line-height:1.08}
+  .landing-copy{font-size:.96rem}
+  .landing-actions .btn{width:100%;max-width:320px}
+  .landing-preview{display:none}
+  .landing-stats{grid-template-columns:1fr;padding:0 20px 48px}
+  .landing-band,.landing-pricing{padding:52px 0}
+  .landing-section{padding:0 20px}
+  .step-grid,.feature-split,.pricing-grid{grid-template-columns:1fr}
+  .feature-split{padding:52px 20px}
+  .auth-card{padding:24px;border-radius:18px}
+  .auth-title{font-size:1.35rem}
 }
 
 /* ===== LEARN: SCENARIO CARDS ===== */
@@ -746,16 +879,17 @@ input,textarea{font-family:var(--font)}
 <body>
 
 <!-- Landing page -->
-<div id="landing-screen" style="display:none;min-height:100vh;background:var(--bg)">
+<div id="landing-screen" class="landing-shell">
   <!-- Nav -->
-  <nav style="position:sticky;top:0;z-index:50;background:rgba(255,255,255,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)">
-    <div style="max-width:1100px;margin:0 auto;padding:14px 32px;display:flex;align-items:center;justify-content:space-between">
-      <div style="display:flex;align-items:center;gap:10px">
-        <img src="logo.jpg" alt="Sales Sparring" style="height:36px">
-      </div>
-      <div id="landing-nav-links" style="display:flex;align-items:center;gap:20px">
-        <a href="#how" style="font-size:0.82rem;font-weight:500;color:var(--text2);text-decoration:none">How it works</a>
-        <a href="#pricing" style="font-size:0.82rem;font-weight:500;color:var(--text2);text-decoration:none">Pricing</a>
+  <nav class="landing-nav">
+    <div class="landing-nav-inner">
+      <a class="brand-lockup" href="#">
+        <span class="brand-mark">SS</span>
+        <span class="brand-name">Sales<span>Sparring</span></span>
+      </a>
+      <div id="landing-nav-links" class="landing-links">
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
         <button class="btn btn-ghost btn-sm" onclick="showLogin()">Sign In</button>
         <button class="btn btn-primary btn-sm" onclick="showLogin(true)">Get Started Free</button>
       </div>
@@ -763,40 +897,46 @@ input,textarea{font-family:var(--font)}
   </nav>
 
   <!-- Hero -->
-  <div style="max-width:1100px;margin:0 auto;padding:80px 32px 60px;text-align:center">
-    <div style="display:inline-flex;align-items:center;gap:6px;background:var(--accent-light);border:1px solid var(--accent-border);border-radius:20px;padding:6px 16px;font-size:0.74rem;font-weight:600;color:var(--accent);margin-bottom:24px">
-      <span style="width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite"></span>
-      AI-powered sales practice
+  <div class="landing-hero">
+    <div class="landing-kicker">AI-powered sales practice</div>
+    <h1 class="landing-title">Practice cold calls against buyers that push back.</h1>
+    <p class="landing-copy">Make live voice calls to realistic AI prospects, handle objections under pressure, and get a scorecard the second the call ends.</p>
+    <div class="landing-actions">
+      <button class="btn btn-primary btn-lg" onclick="showLogin(true)">Start Practicing Free</button>
+      <button class="btn btn-ghost btn-lg" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">See How It Works</button>
     </div>
-    <h1 style="font-size:3.2rem;font-weight:900;letter-spacing:-0.04em;line-height:1.1;margin-bottom:20px;color:var(--text)">
-      Practice cold calls<br>against AI buyers.
-    </h1>
-    <p style="font-size:1.15rem;color:var(--text2);line-height:1.6;margin-bottom:36px;max-width:580px;margin-left:auto;margin-right:auto">
-      Make realistic sales calls to AI prospects who push back, raise objections, and test your skills. Get scored instantly.
-    </p>
-    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:16px">
-      <button class="btn btn-primary btn-lg" style="font-size:1rem;padding:16px 32px" onclick="showLogin(true)">Start Practicing Free</button>
-      <button class="btn btn-ghost btn-lg" style="font-size:1rem;padding:16px 32px" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">See How It Works</button>
+    <p class="landing-note">No credit card required · 15 free minutes every month</p>
+    <div class="landing-preview" aria-hidden="true">
+      <div class="preview-bar"><span class="preview-dot"></span><span class="preview-dot"></span><span class="preview-dot"></span></div>
+      <div class="preview-grid">
+        <div class="preview-call">
+          <div class="preview-call-top">
+            <div class="preview-buyer"><span class="preview-avatar"></span><div><strong>Rob Kowalski</strong><br><span style="font-size:.78rem;color:var(--text2)">Comfort First HVAC</span></div></div>
+            <span class="badge badge-medium">Medium</span>
+          </div>
+          <div class="preview-line blue" style="width:84%"></div>
+          <div class="preview-line" style="width:62%"></div>
+          <div class="preview-line blue" style="width:76%"></div>
+          <div class="preview-line" style="width:48%"></div>
+          <div style="margin-top:22px;padding:12px 14px;background:var(--accent-light);border:1px solid var(--accent-border);border-radius:12px;font-size:.82rem;font-weight:700">Goal: earn a free Google listing audit</div>
+        </div>
+        <div class="preview-score">
+          <div style="font-size:.62rem;font-weight:850;text-transform:uppercase;letter-spacing:.12em;color:#60a5fa;margin-bottom:4px">Post-call analysis</div>
+          <div class="preview-grade">B+</div>
+          <div class="preview-score-row"><span>Opening</span><span class="preview-track"><span class="preview-fill" style="display:block;width:80%;background:#34d399"></span></span><span>12/15</span></div>
+          <div class="preview-score-row"><span>Discovery</span><span class="preview-track"><span class="preview-fill" style="display:block;width:76%"></span></span><span>19/25</span></div>
+          <div class="preview-score-row"><span>Objections</span><span class="preview-track"><span class="preview-fill" style="display:block;width:60%;background:#fbbf24"></span></span><span>12/20</span></div>
+          <div class="preview-score-row"><span>Closing</span><span class="preview-track"><span class="preview-fill" style="display:block;width:86%;background:#34d399"></span></span><span>13/15</span></div>
+        </div>
+      </div>
     </div>
-    <p style="font-size:0.78rem;color:var(--text3)">No credit card required · 15 free minutes every month</p>
   </div>
 
   <!-- Stats bar -->
-  <div style="max-width:900px;margin:0 auto;padding:0 32px 80px">
-    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:32px;text-align:center">
-      <div>
-        <div style="font-size:2rem;font-weight:900;color:var(--accent);font-family:var(--mono)">29+</div>
-        <div style="font-size:0.82rem;color:var(--text2);font-weight:500">Realistic scenarios</div>
-      </div>
-      <div>
-        <div style="font-size:2rem;font-weight:900;color:var(--accent);font-family:var(--mono)">20+</div>
-        <div style="font-size:0.82rem;color:var(--text2);font-weight:500">Unique AI buyer voices</div>
-      </div>
-      <div>
-        <div style="font-size:2rem;font-weight:900;color:var(--accent);font-family:var(--mono)">4</div>
-        <div style="font-size:0.82rem;color:var(--text2);font-weight:500">Difficulty levels</div>
-      </div>
-    </div>
+  <div class="landing-stats">
+    <div class="landing-stat"><div class="landing-stat-value">29+</div><div class="landing-stat-label">Realistic scenarios</div></div>
+    <div class="landing-stat"><div class="landing-stat-value">20+</div><div class="landing-stat-label">Unique AI voices</div></div>
+    <div class="landing-stat"><div class="landing-stat-value">4</div><div class="landing-stat-label">Difficulty levels</div></div>
   </div>
 
   <!-- How it works -->
@@ -920,42 +1060,41 @@ input,textarea{font-family:var(--font)}
 </div>
 
 <!-- Login screen -->
-<div id="login-screen" style="display:none;min-height:100vh;align-items:center;justify-content:center;background:#fff">
-  <div style="width:100%;max-width:380px;padding:32px">
-    <div style="text-align:center;margin-bottom:32px">
-      <div style="display:inline-flex;align-items:center;gap:10px;margin-bottom:16px">
-        <img src="logo.jpg" alt="Sales Sparring" style="height:48px">
+<div id="login-screen" class="auth-screen">
+  <div class="auth-card">
+    <div class="auth-header">
+      <div class="brand-lockup">
+        <span class="brand-mark">SS</span>
+        <span class="brand-name">Sales<span>Sparring</span></span>
       </div>
-      <h1 style="font-size:1.5rem;font-weight:800;letter-spacing:-0.03em;margin-bottom:6px">Sign in to practice</h1>
-      <p style="font-size:0.84rem;color:var(--text2)">Your calls, scores, and progress — saved everywhere.</p>
+      <h1 class="auth-title">Sign in to practice</h1>
+      <p class="auth-copy">Your calls, scores, and progress stay synced to your account.</p>
     </div>
     <div id="auth-form">
-      <div style="margin-bottom:14px">
-        <label style="display:block;font-size:0.72rem;font-weight:600;color:var(--text2);margin-bottom:5px">Email</label>
-        <input id="auth-email" type="email" placeholder="you@example.com" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:0.88rem;background:var(--surface);color:var(--text);outline:none" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+      <div class="auth-field">
+        <label class="auth-label">Email</label>
+        <input id="auth-email" class="auth-input" type="email" placeholder="you@example.com">
       </div>
-      <div style="margin-bottom:20px">
-        <label style="display:block;font-size:0.72rem;font-weight:600;color:var(--text2);margin-bottom:5px">Password</label>
-        <input id="auth-password" type="password" placeholder="••••••••" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:var(--radius);font-size:0.88rem;background:var(--surface);color:var(--text);outline:none" onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
+      <div class="auth-field" style="margin-bottom:20px">
+        <label class="auth-label">Password</label>
+        <input id="auth-password" class="auth-input" type="password" placeholder="••••••••">
       </div>
       <button id="auth-submit" class="btn btn-primary" style="width:100%;padding:12px;font-size:0.9rem" onclick="handleAuth()">Sign In</button>
       <div style="text-align:center;margin-top:10px">
-        <a href="#" onclick="handlePasswordReset();return false" style="font-size:0.74rem;color:var(--text3);text-decoration:none">Forgot password?</a>
+        <a href="#" class="auth-link" onclick="handlePasswordReset();return false">Forgot password?</a>
       </div>
-      <div style="text-align:center;margin:16px 0 12px;display:flex;align-items:center;gap:12px">
-        <div style="flex:1;height:1px;background:var(--border)"></div>
-        <span style="font-size:0.7rem;color:var(--text3);font-weight:500">or</span>
-        <div style="flex:1;height:1px;background:var(--border)"></div>
+      <div class="auth-divider">
+        <span>or</span>
       </div>
       <button class="btn btn-ghost" style="width:100%;padding:11px;font-size:0.84rem;display:flex;align-items:center;justify-content:center;gap:8px" onclick="handleGoogleAuth()">
         <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
         Continue with Google
       </button>
-      <div style="text-align:center;margin-top:14px">
+      <div class="auth-toggle">
         <span style="font-size:0.78rem;color:var(--text3)">Don't have an account? <a href="#" onclick="toggleAuthMode()" style="color:var(--accent);font-weight:600;text-decoration:none" id="auth-toggle">Sign up</a></span>
       </div>
-      <div id="auth-error" style="display:none;margin-top:12px;padding:10px 14px;background:var(--red-light);border:1px solid rgba(229,62,62,0.2);border-radius:var(--radius);font-size:0.78rem;color:var(--red)"></div>
-      <div id="auth-success" style="display:none;margin-top:12px;padding:10px 14px;background:var(--green-light);border:1px solid rgba(56,161,105,0.2);border-radius:var(--radius);font-size:0.78rem;color:var(--green)"></div>
+      <div id="auth-error" class="auth-message error"></div>
+      <div id="auth-success" class="auth-message success"></div>
     </div>
   </div>
 </div>
@@ -963,7 +1102,7 @@ input,textarea{font-family:var(--font)}
 <!-- Mobile header -->
 <div class="mobile-header">
   <button class="hamburger" onclick="toggleSidebar()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
-  <span style="font-weight:800;font-size:0.9rem"><img src="logo.jpg" alt="Sales Sparring" style="height:36px"></span>
+  <span class="brand-lockup"><span class="brand-mini">SS</span><span class="brand-name">Sales<span>Sparring</span></span></span>
   <div style="width:22px"></div>
 </div>
 <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
@@ -972,7 +1111,7 @@ input,textarea{font-family:var(--font)}
 <!-- Sidebar -->
 <nav class="sidebar" id="sidebar">
   <div class="sidebar-logo">
-    <img src="logo.jpg" alt="Sales Sparring" style="height:40px">
+    <span class="brand-lockup"><span class="brand-mark">SS</span><span class="brand-name">Sales<span>Sparring</span></span></span>
   </div>
   <div class="sidebar-nav">
     <div class="nav-item active" data-tab="practice" onclick="switchTab('practice')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>Practice</div>
@@ -1007,9 +1146,23 @@ input,textarea{font-family:var(--font)}
 
   <!-- PRACTICE PAGE -->
   <div id="tab-practice" class="page">
-    <div style="padding:48px 48px 12px;max-width:1100px;margin:0 auto">
-      <h1 style="font-size:2rem;font-weight:900;letter-spacing:-0.03em;margin-bottom:6px">Practice</h1>
-      <p style="font-size:0.95rem;color:var(--text2);margin-bottom:0">Pick a prospect and start calling</p>
+    <div class="practice-top">
+      <div class="practice-hero-row">
+        <div>
+          <div class="practice-eyebrow">Practice Room</div>
+          <h1 class="practice-title">Choose a buyer. Make the call.</h1>
+          <p class="practice-subtitle">Start with a preset scenario or practice your own pitch. Every call ends with a transcript, scorecard, and next move.</p>
+        </div>
+        <div class="practice-actions">
+          <button class="btn btn-ghost" onclick="showProfilePicker()">Practice My Pitch</button>
+          <button class="btn btn-primary" onclick="randomCall()">Random Call</button>
+        </div>
+      </div>
+      <div class="metric-strip">
+        <div class="metric-tile"><div class="metric-label">Scenario Library</div><div class="metric-value">29 calls</div><div class="metric-note">Local services, SaaS, insurance, staffing, and more</div></div>
+        <div class="metric-tile"><div class="metric-label">Free Minutes</div><div class="metric-value">15 min</div><div class="metric-note">Account required before any paid API cost</div></div>
+        <div class="metric-tile"><div class="metric-label">Scorecard</div><div class="metric-value">6 metrics</div><div class="metric-note">Opening, discovery, objections, value, close, rules</div></div>
+      </div>
     </div>
     <div class="scenario-grid" id="scenario-grid"></div>
     <div id="scenario-detail" class="scenario-detail" style="display:none"></div>
@@ -1086,6 +1239,14 @@ const sb = window.supabase.createClient(SB_URL, SB_KEY);
 
 let currentUser = null;
 let isSignUp = false;
+
+async function authJsonHeaders(){
+  const { data: { session } } = await sb.auth.getSession();
+  return {
+    'Content-Type': 'application/json',
+    'Authorization': 'Bearer ' + (session?.access_token || '')
+  };
+}
 
 window.toggleAuthMode = function(){
   isSignUp = !isSignUp;
@@ -1238,8 +1399,6 @@ if(appEl){
 window.RetellWebClient = RetellWebClient;
 
 // ===== CONFIG =====
-const SB_URL = 'https://xacehhtgvubcqdoltazg.supabase.co';
-const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhY2VoaHRndnViY3Fkb2x0YXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI0MDQ3MTQsImV4cCI6MjA1Nzk2MDcxNH0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQs5WYew';
 const EDGE_BASE = SB_URL + '/functions/v1';
 const RETELL_AGENT = 'agent_fbdeb8dd9d63910268aa803a4f';
 // Keys are now server-side only — no more exposed credentials
@@ -1276,8 +1435,8 @@ async function loadUserMinutes(){
 function updateMinutesDisplay(){
   // Update any visible minutes displays
   const remaining = Math.max(0, userMinutes.remaining || 0);
-  const mins = Math.floor(remaining / 60);
-  const secs = Math.floor(remaining % 60);
+  const mins = Math.floor(remaining);
+  const secs = Math.floor((remaining - mins) * 60);
   
   // Sidebar minutes badge
   let badge = document.getElementById('minutes-badge');
@@ -1287,7 +1446,7 @@ function updateMinutesDisplay(){
     if(footer){
       badge = document.createElement('div');
       badge.id = 'minutes-badge';
-      badge.style.cssText = 'padding:8px 12px;background:var(--surface3);border-radius:10px;margin-top:8px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px';
+      badge.style.cssText = 'padding:10px 12px;background:#f8fbff;border:1px solid var(--border);border-radius:12px;margin-top:10px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px';
       badge.onclick = () => switchTab('settings');
       footer.appendChild(badge);
     }
@@ -1298,7 +1457,7 @@ function updateMinutesDisplay(){
     badge.innerHTML = `
       <div style="display:flex;align-items:center;gap:6px">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${isLow ? 'var(--red)' : 'var(--accent)'}" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        <span style="font-size:0.72rem;font-weight:600;color:${isLow ? 'var(--red)' : 'var(--text2)'}">${mins}m ${secs}s left</span>
+        <span style="font-size:0.72rem;font-weight:750;color:${isLow ? 'var(--red)' : 'var(--text2)'}">${mins}m ${secs.toString().padStart(2,'0')}s left</span>
       </div>
       ${isFree ? '<span style="font-size:0.62rem;font-weight:700;color:var(--accent);text-transform:uppercase">Upgrade</span>' : ''}
     `;
@@ -1665,7 +1824,7 @@ window.switchTab = function(tab){
   if(navItem) navItem.classList.add('active');
   if(tab==='analytics') renderAnalytics();
   if(tab==='learn'){renderDailyChallenge();renderLearnScenarios();}
-  if(tab==='practice'){randomCall();}
+  if(tab==='practice'){renderScenarioGrid();resetPracticeView();}
   if(tab==='company') renderProfileList();
   if(tab==='settings') renderSettings();
   if(tab==='transcripts') renderTranscripts();
@@ -1700,28 +1859,26 @@ function renderDailyChallenge(){
 function renderScenarioGrid(){
   const grid=document.getElementById('scenario-grid');
   if(!grid) return;
-  grid.style.display='grid';
-  grid.style.gridTemplateColumns='repeat(auto-fill,minmax(320px,1fr))';
-  grid.style.gap='16px';
-  grid.style.maxWidth='1100px';
-  grid.style.margin='0 auto';
-  grid.style.padding='0 48px 60px';
   grid.innerHTML=SCENARIOS.map(s=>{
     const best=getScenarioBestScore(s.id);
-    return `<div onclick="selectScenario('${s.id}')" style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px 24px;cursor:pointer;transition:box-shadow .2s,transform .15s" onmouseover="this.style.boxShadow='0 4px 20px rgba(0,0,0,0.08)';this.style.transform='translateY(-1px)'" onmouseout="this.style.boxShadow='none';this.style.transform='none'">
-      <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
-        <div style="width:44px;height:44px;border-radius:50%;overflow:hidden;flex-shrink:0;border:2px solid var(--orange)">
-          <img src="https://api.dicebear.com/9.x/personas/svg?seed=${encodeURIComponent(s.buyer)}&backgroundColor=fed7aa" style="width:100%;height:100%;object-fit:cover">
+    return `<div class="scenario-card-mini" onclick="selectScenario('${s.id}')">
+      <div class="scenario-card-top">
+        <div class="scenario-avatar">
+          <img src="https://api.dicebear.com/9.x/personas/svg?seed=${encodeURIComponent(s.buyer)}&backgroundColor=fed7aa" alt="">
         </div>
         <div style="flex:1;min-width:0">
-          <div style="font-size:0.9rem;font-weight:700;color:var(--text)">${esc(s.buyer.split(',')[0])}</div>
-          <div style="font-size:0.78rem;color:var(--text2)">${esc(s.company)}</div>
+          <div class="scenario-person">${esc(s.buyer.split(',')[0])}</div>
+          <div class="scenario-company">${esc(s.company)}</div>
         </div>
-        ${best!==null?`<div style="font-size:0.72rem;font-weight:600;color:var(--accent);background:var(--accent-light);padding:3px 10px;border-radius:12px">${best}</div>`:''}
+        <span class="scenario-difficulty">${esc(s.difficulty || 'standard')}</span>
       </div>
-      <div style="font-size:1.05rem;font-weight:800;color:var(--text);margin-bottom:2px">${esc(s.productName||s.product)}</div>
-      <div style="font-size:0.78rem;color:var(--accent);font-weight:600;margin-bottom:6px">${esc(s.sellerCompany||s.product)}</div>
-      <div style="font-size:0.78rem;color:var(--text2);margin-bottom:14px;line-height:1.4">${esc(s.goal)}</div>
+      <div class="scenario-title">${esc(s.productName||s.product)}</div>
+      <div class="scenario-seller">${esc(s.sellerCompany||s.product)}</div>
+      <div class="scenario-goal">${esc(s.goal)}</div>
+      <div class="scenario-card-foot">
+        <span>${best!==null?`Best score: <strong class="scenario-best">${best}</strong>`:'No score yet'}</span>
+        <span class="scenario-start">Open scenario</span>
+      </div>
     </div>`;
   }).join('');
 }
@@ -1850,7 +2007,10 @@ window.showProfilePicker = function(){
   const profiles = getProfiles();
   if(!profiles.length){ alert('No pitches yet. Go to My Pitches to create one.'); return; }
   const card = document.getElementById('scenario-detail');
-  document.getElementById('practice-empty').style.display='none';
+  const empty = document.getElementById('practice-empty');
+  if(empty) empty.style.display='none';
+  const grid = document.getElementById('scenario-grid');
+  if(grid) grid.style.display='none';
   card.style.display='block';
   card.innerHTML = `
     <div class="scenario-card">
@@ -2269,7 +2429,7 @@ window.handleUpgrade = async function(){
   try{
     const resp = await fetch(EDGE_BASE+'/stripe-checkout',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+sb.auth.session()?.access_token},
+      headers: await authJsonHeaders(),
       body:JSON.stringify({plan:'pro'})
     });
     const data = await resp.json();
@@ -2510,7 +2670,7 @@ COACHING TONE: Direct, no fluff. Like a GM watching game film. If they're doing 
   try{
     const resp = await fetch(EDGE_BASE+'/ai-proxy',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+sb.auth.session()?.access_token},
+      headers: await authJsonHeaders(),
       body:JSON.stringify({model:'gpt-4o',messages:[{role:'system',content:'You are a senior sales coach providing live call coaching. Always respond with valid JSON only.'},{role:'user',content:prompt}],temperature:0.3,max_tokens:500})
     });
     const data = await resp.json();
@@ -2583,7 +2743,7 @@ window.startCall = async function(){
 
     const resp=await fetch(EDGE_BASE+'/create-call',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+sb.auth.session()?.access_token},
+      headers: await authJsonHeaders(),
       body:JSON.stringify({
         voice_id:matchVoiceToPersona(s)||s.voice||undefined,
         retell_llm_dynamic_variables:{
@@ -2820,7 +2980,7 @@ ${gradingRules}`;
     const key=null; // Keys now server-side
     const resp=await fetch(EDGE_BASE+'/ai-proxy',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+sb.auth.session()?.access_token},
+      headers: await authJsonHeaders(),
       body:JSON.stringify({model:'gpt-4o',messages:[{role:'system',content:'You are a sales call grader. You grade based on evidence from the transcript. Quote specific lines. Use the computed metrics as facts. Never give benefit of the doubt — if there is no evidence of a skill being demonstrated, score it low.'},{role:'user',content:fullPrompt}],temperature:0.1,max_tokens:2500})
     });
     const data=await resp.json();
@@ -3380,7 +3540,7 @@ Return ONLY a JSON object with this exact structure:
   try {
     const resp = await fetch(EDGE_BASE+'/ai-proxy', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+sb.auth.session()?.access_token},
+      headers: await authJsonHeaders(),
       body: JSON.stringify({
         model: 'gpt-4o',
         messages: [
