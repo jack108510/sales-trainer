@@ -1036,7 +1036,7 @@ input,textarea{font-family:var(--font)}
   <div id="tab-company" class="page"><div class="page-header"><div><div class="page-title">My Pitches</div><div class="page-subtitle">Practice with your real product or service</div></div><button class="btn btn-primary btn-sm" onclick="newProfile()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>New Pitch</button></div><div id="profile-list" style="padding:0 48px 60px;max-width:1100px;margin:0 auto"></div><div id="profile-form-wrap" style="display:none;padding:0 48px 60px;max-width:1100px;margin:0 auto"></div></div>
   <div id="tab-transcripts" class="page"><div class="page-header"><div><div class="page-title">Transcripts</div><div class="page-subtitle">Full call history with scores and feedback</div></div></div><div id="transcripts-content" style="padding:0 48px 60px;max-width:1100px;margin:0 auto"></div></div>
   <div id="tab-analytics" class="page"><div class="page-header"><div><div class="page-title">Analytics</div><div class="page-subtitle">Track your improvement over time</div></div></div><div id="analytics-content" style="padding:0 48px 60px;max-width:1100px;margin:0 auto"></div></div>
-  <div id="tab-settings" class="page"><div class="page-header"><div><div class="page-title">Settings</div><div class="page-subtitle">Configure your API keys and preferences</div></div></div><div id="settings-content" style="padding:0 48px 60px;max-width:1100px;margin:0 auto"></div></div>
+  <div id="tab-settings" class="page"><div class="page-header"><div><div class="page-title">Settings</div><div class="page-subtitle">Manage your account, minutes, and subscription</div></div></div><div id="settings-content" style="padding:0 48px 60px;max-width:1100px;margin:0 auto"></div></div>
 </div>
 </div>
 
@@ -1113,6 +1113,7 @@ function showApp(){
   try { updateStreak(); } catch(e) {}
   try { updateTranscriptBadge(); } catch(e) {}
   try { updateXPDisplay(); } catch(e) {}
+  try { loadUserMinutes(); } catch(e) {}
   try { renderDailyChallenge(); } catch(e) {}
   try { renderScenarioGrid(); } catch(e) {}
   try { renderLearnScenarios(); } catch(e) {}
@@ -1171,9 +1172,11 @@ if(appEl){
 window.RetellWebClient = RetellWebClient;
 
 // ===== CONFIG =====
-const RETELL_KEY = atob('a2V5X2M4MzNkZjlhODkxYmFjZmMwMDJjZjg3MTRjMGM=');
+const SB_URL = 'https://xacehhtgvubcqdoltazg.supabase.co';
+const SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhhY2VoaHRndnViY3Fkb2x0YXpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDI0MDQ3MTQsImV4cCI6MjA1Nzk2MDcxNH0.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQs5WYew';
+const EDGE_BASE = SB_URL + '/functions/v1';
 const RETELL_AGENT = 'agent_fbdeb8dd9d63910268aa803a4f';
-const OPENAI_KEY = atob('c2stcHJvai1vaDBRLWhvc0VsLWV6QXZIZV8tQ05wa3FodVF5Zmo4MlZ4V1dMa1EwS3lhZUVXRUhWaXB3T0hNN1E4eERfZm80TXVmTVppdlJZNFQzQmxCSkVKRTZ1S3RyM1JVelJHTjhCSXl0YlZRTjJISlR4a21ubFJic3J1SnFuVGQ3ZUtIc3hpTUpwMVRSWkVzUzlCNnFwM2NHTTMzVW9JQQ==');
+// Keys are now server-side only — no more exposed credentials
 
 // ===== STATE =====
 let client = null;
@@ -1185,6 +1188,124 @@ let callStartTime = null;
 let youTalkSeconds = 0;
 let buyerTalkSeconds = 0;
 let currentSpeaker = null;
+
+// ===== MINUTES SYSTEM =====
+let userMinutes = { remaining: 15, total: 15, plan: 'free' };
+let countdownInterval = null;
+
+async function loadUserMinutes(){
+  if(!currentUser) return;
+  try {
+    const { data } = await sb.from('ss_users')
+      .select('minutes_remaining, minutes_total, plan')
+      .eq('id', currentUser.id)
+      .single();
+    if(data){
+      userMinutes = data;
+      updateMinutesDisplay();
+    }
+  } catch(e) { console.error('loadUserMinutes:', e); }
+}
+
+function updateMinutesDisplay(){
+  // Update any visible minutes displays
+  const remaining = Math.max(0, userMinutes.remaining || 0);
+  const mins = Math.floor(remaining / 60);
+  const secs = Math.floor(remaining % 60);
+  
+  // Sidebar minutes badge
+  let badge = document.getElementById('minutes-badge');
+  if(!badge){
+    // Create it in the sidebar footer
+    const footer = document.querySelector('.sidebar-footer');
+    if(footer){
+      badge = document.createElement('div');
+      badge.id = 'minutes-badge';
+      badge.style.cssText = 'padding:8px 12px;background:var(--surface3);border-radius:10px;margin-top:8px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:8px';
+      badge.onclick = () => switchTab('settings');
+      footer.appendChild(badge);
+    }
+  }
+  if(badge){
+    const isLow = remaining < 5;
+    const isFree = userMinutes.plan === 'free';
+    badge.innerHTML = `
+      <div style="display:flex;align-items:center;gap:6px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="${isLow ? 'var(--red)' : 'var(--accent)'}" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span style="font-size:0.72rem;font-weight:600;color:${isLow ? 'var(--red)' : 'var(--text2)'}">${mins}m ${secs}s left</span>
+      </div>
+      ${isFree ? '<span style="font-size:0.62rem;font-weight:700;color:var(--accent);text-transform:uppercase">Upgrade</span>' : ''}
+    `;
+  }
+}
+
+function startCountdownTimer(){
+  // Show the countdown pill during calls
+  let pill = document.getElementById('call-countdown');
+  if(!pill){
+    const callMeta = document.querySelector('.call-meta');
+    if(callMeta){
+      pill = document.createElement('div');
+      pill.id = 'call-countdown';
+      pill.style.cssText = 'display:flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:0.72rem;font-weight:700;font-family:var(--mono);background:var(--surface3);color:var(--text2);transition:all 0.3s';
+      callMeta.insertBefore(pill, callMeta.firstChild);
+    }
+  }
+  
+  if(countdownInterval) clearInterval(countdownInterval);
+  
+  const updatePill = () => {
+    const remaining = Math.max(0, userMinutes.remaining * 60 - callSeconds);
+    const mins = Math.floor(remaining / 60);
+    const secs = remaining % 60;
+    const display = `${mins}:${secs.toString().padStart(2,'0')}`;
+    
+    if(pill){
+      pill.textContent = '⏱ ' + display;
+      
+      if(remaining <= 60){
+        pill.style.background = 'rgba(229,62,62,0.1)';
+        pill.style.color = 'var(--red)';
+        pill.style.border = '1px solid rgba(229,62,62,0.3)';
+      } else if(remaining <= 300){
+        pill.style.background = 'rgba(251,191,36,0.1)';
+        pill.style.color = '#d97706';
+        pill.style.border = '1px solid rgba(251,191,36,0.3)';
+      }
+    }
+    
+    // Auto-end call at 0
+    if(remaining <= 0){
+      if(callTimerInterval) clearInterval(callTimerInterval);
+      if(countdownInterval) clearInterval(countdownInterval);
+      log('Time's up! Call ended.','sys');
+      endCall();
+    } else if(remaining === 30){
+      log('30 seconds remaining...','sys');
+    }
+  };
+  
+  updatePill();
+  countdownInterval = setInterval(updatePill, 1000);
+}
+
+async function deductCallMinutes(seconds){
+  if(!currentUser) return;
+  const minutesUsed = seconds / 60;
+  try {
+    // Call the deduct_minutes function
+    const { error } = await sb.rpc('deduct_minutes', {
+      p_user_id: currentUser.id,
+      p_minutes: minutesUsed,
+      p_call_id: 'call_' + Date.now()
+    });
+    if(!error){
+      userMinutes.remaining = Math.max(0, userMinutes.remaining - minutesUsed);
+      updateMinutesDisplay();
+    }
+  } catch(e) { console.error('deductCallMinutes:', e); }
+}
+
 // ===== DYNAMIC VOICE MATCHING =====
 // Maps persona traits to the best available voice
 const VOICE_LIBRARY = {
@@ -1994,27 +2115,70 @@ window.toggleHistoryDetail = function(i){
 // ===== SETTINGS =====
 function renderSettings(){
   const el = document.getElementById('settings-content');
+  const remaining = Math.max(0, userMinutes.remaining || 0);
+  const total = userMinutes.total || 15;
+  const plan = userMinutes.plan || 'free';
+  const pct = total > 0 ? Math.round((remaining / total) * 100) : 0;
+  const mins = Math.floor(remaining / 60);
+  const secs = Math.floor(remaining % 60);
+  
   el.innerHTML=`
     <div class="settings-section">
-      <div class="settings-section-title">API Configuration</div>
+      <div class="settings-section-title">Subscription & Minutes</div>
+      <div class="settings-card" style="padding:28px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+          <div>
+            <div style="font-size:1.1rem;font-weight:800;text-transform:capitalize">${plan} Plan</div>
+            <div style="font-size:0.82rem;color:var(--text2);margin-top:2px">${plan==='free'?'Upgrade for more practice time':'Renews monthly'}</div>
+          </div>
+          ${plan==='free'?'<button class="btn btn-primary" onclick="handleUpgrade()">Upgrade to Pro →</button>':'<button class="btn btn-ghost" onclick="handleManageSubscription()">Manage Subscription</button>'}
+        </div>
+        
+        <div style="background:var(--surface3);border-radius:14px;padding:20px;margin-bottom:16px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+            <span style="font-size:0.82rem;font-weight:600;color:var(--text2)">Practice Minutes Remaining</span>
+            <span style="font-size:1.4rem;font-weight:900;font-family:var(--mono);color:${remaining<5?'var(--red)':remaining<15?'#d97706':'var(--accent)'}">${mins}<span style="font-size:0.9rem;color:var(--text3)">m</span> ${secs}<span style="font-size:0.9rem;color:var(--text3)">s</span></span>
+          </div>
+          <div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">
+            <div style="height:100%;width:${pct}%;background:${remaining<5?'var(--red)':remaining<15?'#fbbf24':'var(--accent)'};border-radius:4px;transition:width 0.5s"></div>
+          </div>
+          <div style="font-size:0.72rem;color:var(--text3);margin-top:8px">${remaining.toFixed(0)} of ${total} minutes used this cycle</div>
+        </div>
+
+        ${plan==='free' ? `
+        <div style="border:1px solid var(--accent-border);background:var(--accent-light);border-radius:14px;padding:20px">
+          <div style="font-size:0.9rem;font-weight:700;margin-bottom:6px">Upgrade to Pro — $29/month</div>
+          <ul style="font-size:0.8rem;color:var(--text2);list-style:none;padding:0;margin:0 0 14px 0;display:flex;flex-direction:column;gap:4px">
+            <li>✓ 150 practice minutes per month</li>
+            <li>✓ Unlimited scenarios & difficulty levels</li>
+            <li>✓ Save custom pitches</li>
+            <li>✓ Analytics & progress tracking</li>
+            <li>✓ Cancel anytime</li>
+          </ul>
+          <button class="btn btn-primary" style="width:100%" onclick="handleUpgrade()">Start Pro Free Trial</button>
+        </div>
+        ` : ''}
+      </div>
+    </div>
+    
+    <div class="settings-section">
+      <div class="settings-section-title">Account</div>
       <div class="settings-card">
         <div class="settings-row">
-          <div><div class="settings-row-label">OpenAI API Key</div><div class="settings-row-desc">Used for post-call scoring, live coaching, and real-time grading (GPT-4o-mini)</div></div>
-          <div class="settings-row-right">
-            <div class="api-key-wrap">
-              <input type="password" class="api-key-input" id="openai-key-input" placeholder="sk-proj-..." value="${localStorage.getItem('custom_openai_key')||''}">
-              <button class="btn btn-sm btn-ghost" onclick="saveApiKey('openai')">Save</button>
-              <span class="api-key-status ${localStorage.getItem('custom_openai_key')?'saved':'unsaved'}" id="openai-key-status">${localStorage.getItem('custom_openai_key')?'Saved':'Not set'}</span>
-            </div>
-          </div>
+          <div><div class="settings-row-label">Email</div><div class="settings-row-desc">${currentUser?.email||'Unknown'}</div></div>
+        </div>
+        <div class="settings-row">
+          <div><div class="settings-row-label">Sign Out</div><div class="settings-row-desc">Sign out of your account</div></div>
+          <div class="settings-row-right"><button class="btn btn-ghost btn-sm" onclick="handleSignOut()">Sign Out</button></div>
         </div>
       </div>
     </div>
+    
     <div class="settings-section">
       <div class="settings-section-title">Data</div>
       <div class="settings-card">
         <div class="settings-row">
-          <div><div class="settings-row-label">Call History & Transcripts</div><div class="settings-row-desc">${getCallHistory().length} calls recorded in your browser</div></div>
+          <div><div class="settings-row-label">Call History & Transcripts</div><div class="settings-row-desc">${getCallHistory().length} calls recorded</div></div>
           <div class="settings-row-right"><button class="btn btn-ghost btn-sm" onclick="clearHistory()">Clear All</button></div>
         </div>
         <div class="settings-row">
@@ -2023,26 +2187,47 @@ function renderSettings(){
         </div>
       </div>
     </div>
+    
     <div class="settings-section">
       <div class="settings-section-title">About</div>
       <div class="settings-card">
         <div class="settings-row">
-          <div><div class="settings-row-label">Sales Sparring</div><div class="settings-row-desc">AI-powered sales call practice for individuals. All data stays in your browser. Live coaching and real-time grading require an OpenAI API key.</div></div>
+          <div><div class="settings-row-label">Sales Sparring</div><div class="settings-row-desc">AI-powered sales call practice. Realistic buyers, instant scoring, real feedback.</div></div>
         </div>
       </div>
     </div>`;
 }
 
-window.saveApiKey = function(type){
-  if(type==='openai'){
-    const val=document.getElementById('openai-key-input').value.trim();
-    if(val) localStorage.setItem('custom_openai_key',val);
-    else localStorage.removeItem('custom_openai_key');
-    const status=document.getElementById('openai-key-status');
-    status.textContent=val?'Saved':'Not set';
-    status.className='api-key-status '+(val?'saved':'unsaved');
+window.handleUpgrade = async function(){
+  if(!currentUser) return;
+  try{
+    const resp = await fetch(EDGE_BASE+'/stripe-checkout',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+sb.auth.session()?.access_token},
+      body:JSON.stringify({plan:'pro'})
+    });
+    const data = await resp.json();
+    if(data.url){
+      window.location.href = data.url;
+    } else {
+      alert('Unable to start checkout: '+(data.error||'Unknown error'));
+    }
+  }catch(e){
+    alert('Checkout error: '+e.message);
   }
 };
+
+window.handleManageSubscription = function(){
+  // TODO: Stripe customer portal
+  alert('Subscription management coming soon. Email jack@wildroseautomations.ca to cancel or change your plan.');
+};
+
+window.handleSignOut = async function(){
+  await sb.auth.signOut();
+  currentUser = null;
+  document.getElementById('app-shell').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('landing-screen').style.display = 'block';};
 
 window.clearHistory = function(){
   if(!confirm('Clear all call history and transcripts? This cannot be undone.')) return;
@@ -2211,7 +2396,7 @@ async function runLiveCoaching(){
   if(callTranscript.length - lastCoachingLength < 3) return;
   lastCoachingLength = callTranscript.length;
 
-  const key = localStorage.getItem('custom_openai_key') || OPENAI_KEY;
+  // Keys now server-side via edge function
   if(!key) return;
 
   showCoachingThinking();
@@ -2257,9 +2442,9 @@ Respond ONLY with valid JSON:
 COACHING TONE: Direct, no fluff. Like a GM watching game film. If they're doing something wrong, say it plainly. If they're doing something right, tell them to double down. Use specific quotes from the transcript.`;
 
   try{
-    const resp = await fetch('https://api.openai.com/v1/chat/completions',{
+    const resp = await fetch(EDGE_BASE+'/ai-proxy',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+sb.auth.session()?.access_token},
       body:JSON.stringify({model:'gpt-4o',messages:[{role:'system',content:'You are a senior sales coach providing live call coaching. Always respond with valid JSON only.'},{role:'user',content:prompt}],temperature:0.3,max_tokens:500})
     });
     const data = await resp.json();
@@ -2330,11 +2515,10 @@ window.startCall = async function(){
     }
     log('Connecting to '+s.buyer+'...','sys');
 
-    const resp=await fetch('https://api.retellai.com/v2/create-web-call',{
+    const resp=await fetch(EDGE_BASE+'/create-call',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+RETELL_KEY},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+sb.auth.session()?.access_token},
       body:JSON.stringify({
-        agent_id:RETELL_AGENT,
         voice_id:matchVoiceToPersona(s)||s.voice||undefined,
         retell_llm_dynamic_variables:{
           product:s.product,company_name:s.company,company_description:s.companyDesc,
@@ -2356,6 +2540,7 @@ window.startCall = async function(){
       showCallUi(false); if(callBtn){callBtn.disabled=false;callBtn.innerHTML=callBtnHTML();} return;
     }
     log('Connected. Start pitching!','sys');
+    startCountdownTimer();
     try{
       const stream=await navigator.mediaDevices.getUserMedia({audio:true});
       stream.getTracks().forEach(t=>t.stop());
@@ -2566,10 +2751,10 @@ CALL DURATION: ${duration} (${transcript.length} exchanges)
 ${gradingRules}`;
 
   try{
-    const key=localStorage.getItem('custom_openai_key')||OPENAI_KEY;
-    const resp=await fetch('https://api.openai.com/v1/chat/completions',{
+    const key=null; // Keys now server-side
+    const resp=await fetch(EDGE_BASE+'/ai-proxy',{
       method:'POST',
-      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+sb.auth.session()?.access_token},
       body:JSON.stringify({model:'gpt-4o',messages:[{role:'system',content:'You are a sales call grader. You grade based on evidence from the transcript. Quote specific lines. Use the computed metrics as facts. Never give benefit of the doubt — if there is no evidence of a skill being demonstrated, score it low.'},{role:'user',content:fullPrompt}],temperature:0.1,max_tokens:2500})
     });
     const data=await resp.json();
@@ -2587,6 +2772,9 @@ async function handleCallEnd(savedTranscript,savedDuration,savedScenario){
   isConnected=false;
   stopTimer();
   stopCoachingEngine();
+  if(countdownInterval){clearInterval(countdownInterval);countdownInterval=null;}
+  // Deduct minutes used
+  if(duration > 0) deductCallMinutes(duration);
   showCallUi(false);
   if(callBtn){callBtn.innerHTML=callBtnHTML();callBtn.className='btn btn-primary btn-lg';callBtn.disabled=false;}
   startCallWrap.style.display=currentScenario?'flex':'none';
@@ -3090,7 +3278,7 @@ async function gradeDrill(transcript, scenario){
     </div>
   `;
 
-  const key = localStorage.getItem('custom_openai_key') || OPENAI_KEY;
+  const key = null; // Keys now server-side via edge function
   
   const prompt = `You are a sales coach grading a single drill response. 
 
@@ -3124,9 +3312,9 @@ Return ONLY a JSON object with this exact structure:
 }`;
 
   try {
-    const resp = await fetch('https://api.openai.com/v1/chat/completions', {
+    const resp = await fetch(EDGE_BASE+'/ai-proxy', {
       method: 'POST',
-      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer ' + key},
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer '+sb.auth.session()?.access_token},
       body: JSON.stringify({
         model: 'gpt-4o',
         messages: [
