@@ -85,7 +85,7 @@ input,textarea,select{font-family:var(--font)}
 /* ===== PRACTICE TAB ===== */
 .practice-hero{padding:calc(24px + var(--safe-top)) 20px 24px}
 .practice-hero-logo{display:flex;align-items:center;gap:8px;margin-bottom:20px}
-.practice-hero-logo img{height:36px}
+.practice-hero-logo img{height:36px;mix-blend-mode:multiply}
 .practice-hero-badge{display:inline-flex;align-items:center;gap:6px;background:var(--accent-light);border:1px solid var(--accent-border);border-radius:20px;padding:5px 14px;font-size:0.68rem;font-weight:600;color:var(--accent);margin-bottom:14px}
 .practice-hero-badge-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite}
 .practice-hero h1{font-size:1.6rem;font-weight:900;letter-spacing:-0.03em;line-height:1.2;margin-bottom:8px}
@@ -601,8 +601,7 @@ function showLogin(){
 }
 
 async function initAuth(){
-  const { data: { session } } = await sb.auth.getSession();
-  if(session){ currentUser = session.user; showApp(); } else { showLogin(); }
+  showApp();
 }
 
 sb.auth.onAuthStateChange((event, session) => {
