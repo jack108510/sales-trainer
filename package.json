@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Sales Sparring iOS app shell and web prototype.",
   "scripts": {
-    "build": "mkdir -p dist && cp index.html logo.jpg manifest.webmanifest dist/",
+    "build": "mkdir -p dist && cp index.html logo.jpg logo.png manifest.webmanifest dist/",
     "ios:sync": "npm run build && npx cap sync ios",
     "ios:open": "npm run ios:sync && npx cap open ios",
     "test": "npm run build && npx cap doctor"
