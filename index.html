@@ -101,6 +101,15 @@ button{cursor:pointer}
 .scenario-pill.active{border-color:var(--blue);background:var(--blue-soft)}
 .pill-title{font-size:.78rem;font-weight:900;line-height:1.25}
 .pill-meta{font-size:.66rem;color:var(--muted);margin-top:3px}
+/* Floating call bar — keeps scenario card visible */
+.live-bar{position:fixed;top:calc(var(--safe-top,0px) + 8px);left:50%;transform:translateX(-50%);width:calc(100% - 24px);max-width:520px;background:var(--surface);border:1.5px solid rgba(220,49,66,.35);border-radius:14px;padding:10px 14px;display:none;align-items:center;justify-content:space-between;box-shadow:0 4px 20px rgba(0,0,0,.12);z-index:50}
+.live-bar.active{display:flex}
+.live-bar-left{display:flex;align-items:center;gap:8px}
+.live-bar-right{display:flex;align-items:center;gap:8px}
+.live-bar .live-dot{flex-shrink:0}
+.live-bar .call-name{font-size:.82rem}
+.live-bar .timer{font-size:.82rem}
+.live-bar .btn-danger{padding:5px 14px;font-size:.7rem;line-height:1.4;border-radius:8px}
 .call-screen{position:fixed;inset:0;z-index:40;display:none;background:var(--bg)}
 .call-screen.active{display:flex;flex-direction:column;max-width:520px;margin:0 auto;left:50%;right:auto;width:100%;transform:translateX(-50%);box-shadow:0 0 70px rgba(14,32,62,.16)}
 .call-top{padding:calc(12px + var(--safe-top)) 14px 10px;background:var(--surface);border-bottom:1px solid var(--border)}
@@ -328,6 +337,19 @@ button{cursor:pointer}
 
 <div id="score-sheet" class="score-sheet"></div>
 <div id="warmup-modal" class="modal"></div>
+
+<!-- Floating live call bar -->
+<div id="live-bar" class="live-bar">
+  <div class="live-bar-left">
+    <span class="live-dot"></span>
+    <div class="avatar" style="width:26px;height:26px"><img id="live-bar-avatar" alt=""></div>
+    <div class="call-name" id="live-bar-name"></div>
+  </div>
+  <div class="live-bar-right">
+    <div class="timer" id="live-bar-timer">00:00</div>
+    <button id="live-bar-end" class="btn btn-danger" type="button" style="padding:5px 14px;font-size:.7rem">End</button>
+  </div>
+</div>
 <div id="change-modal" class="modal"></div>
 <div id="toast" class="toast"></div>
 
@@ -339,7 +361,7 @@ const SB_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 const sb = window.supabase.createClient(SB_URL, SB_KEY);
 
 const RETELL_KEY = atob("a2V5X2M4MzNkZjlhODkxYmFjZmMwMDJjZjg3MTRjMGM=");
-const RETELL_AGENT = "agent_fbdeb8dd9d63910268aa803a4f";
+const RETELL_AGENT = "agent_1f0203a93570267a1bf6b5c53f";
 const VOICES = ["11labs-Cimo","11labs-Kate","11labs-Nico","11labs-Grace","11labs-Paul","11labs-Susan","11labs-Lily","11labs-Steve"];
 const VERSION = "scenario-rebuild-2026-06-18";
 
@@ -658,13 +680,17 @@ function dynamicVars(sc){
 }
 
 function openCallScreen(sc){
-  $("call-screen").classList.add("active");$("nav").classList.add("hidden");
+  // Keep scenario card visible — show floating live bar instead of full-screen overlay
+  $("transcript").innerHTML="";
   $("call-name").textContent=sc.card.contact.name;$("call-company").textContent=sc.card.contact.company;
-  $("call-avatar").src=avatar(sc);$("transcript").innerHTML="";
-  $("call-ref-body").innerHTML=`<strong>Calling:</strong> ${esc(sc.card.contact.name)} - ${esc(sc.card.contact.title)}<br><strong>Company:</strong> ${esc(sc.card.company_snapshot)}<br><strong>Product:</strong> ${esc(sc.meta.product.name)}<br><strong>Goal:</strong> ${esc(sc.card.your_goal)}`;
-  logLine("Connecting. Start with a tight opener.", "sys");
+  $("call-avatar").src=avatar(sc);
+  $("live-bar-name").textContent=sc.card.contact.name;
+  $("live-bar-avatar").src=avatar(sc);
+  $("live-bar-timer").textContent="00:00";
+  $("live-bar").classList.add("active");
+  $("live-bar-end").onclick=()=>endCall();
 }
-function closeCallScreen(){$("call-screen").classList.remove("active");$("nav").classList.remove("hidden")}
+function closeCallScreen(){$("live-bar").classList.remove("active");}
 function logLine(text,role){
   const row=document.createElement("div"); row.className="tline";
   if(role==="sys"){row.innerHTML=`<div class="tbubble sys">${esc(text)}</div>`}
@@ -673,7 +699,7 @@ function logLine(text,role){
 }
 function startTimer(){
   callSeconds=0;youTalk=0;buyerTalk=0;currentSpeaker=null;$("timer").textContent="00:00";$("ratio-fill").style.width="50%";$("ratio-label").textContent="50%";
-  timerId=setInterval(()=>{callSeconds++;if(currentSpeaker==="user")youTalk++;if(currentSpeaker==="buyer")buyerTalk++;const m=String(Math.floor(callSeconds/60)).padStart(2,"0"),s=String(callSeconds%60).padStart(2,"0");$("timer").textContent=`${m}:${s}`;const total=youTalk+buyerTalk;if(total){const pct=Math.round(youTalk/total*100);$("ratio-fill").style.width=pct+"%";$("ratio-label").textContent=pct+"%" }},1000);
+  timerId=setInterval(()=>{callSeconds++;if(currentSpeaker==="user")youTalk++;if(currentSpeaker==="buyer")buyerTalk++;const m=String(Math.floor(callSeconds/60)).padStart(2,"0"),s=String(callSeconds%60).padStart(2,"0");const ts=`${m}:${s}`;$("timer").textContent=ts;$("live-bar-timer").textContent=ts;const total=youTalk+buyerTalk;if(total){const pct=Math.round(youTalk/total*100);$("ratio-fill").style.width=pct+"%";$("ratio-label").textContent=pct+"%" }},1000);
 }
 function stopTimer(){if(timerId)clearInterval(timerId);timerId=null}
 function fmt(sec){return `${String(Math.floor(sec/60)).padStart(2,"0")}:${String(sec%60).padStart(2,"0")}`}
@@ -729,7 +755,7 @@ async function startCall(){
 }
 async function endCall(){if(client&&isConnected)client.stopCall();else finishCall()}
 async function finishCall(){
-  if(!isConnected && !$("call-screen").classList.contains("active")) return;
+  if(!isConnected && !$("live-bar").classList.contains("active")) return;
   isConnected=false; stopTimer(); currentSpeaker=null;
   await scoreCall();
 }
