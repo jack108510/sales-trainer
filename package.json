@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Sales Sparring iOS app shell and web prototype.",
   "scripts": {
-    "build": "mkdir -p dist && cp index.html logo.jpg manifest.webmanifest dist/",
+    "build": "mkdir -p dist && cp index.html logo.jpg manifest.webmanifest dist/ && echo \"export { RetellWebClient } from 'retell-client-js-sdk';\" > /tmp/retell-wrapper.js && cp /tmp/retell-wrapper.js retell-wrapper.js && npx esbuild retell-wrapper.js --bundle --format=esm --outfile=dist/retell.js && rm -f retell-wrapper.js && npx esbuild ./node_modules/@supabase/supabase-js --bundle --format=iife --global-name=supabase --define:process.version='\"20.0.0\"' --define:process.env.NODE_ENV='\"production\"' --outfile=dist/supabase.js",
     "ios:sync": "npm run build && npx cap sync ios",
     "ios:open": "npm run ios:sync && npx cap open ios",
     "test": "npm run build && npx cap doctor"
@@ -16,6 +16,8 @@
   "dependencies": {
     "@capacitor/cli": "^8.4.0",
     "@capacitor/core": "^8.4.0",
-    "@capacitor/ios": "^8.4.0"
+    "@capacitor/ios": "^8.4.0",
+    "@supabase/supabase-js": "^2.108.2",
+    "retell-client-js-sdk": "^2.0.8"
   }
 }

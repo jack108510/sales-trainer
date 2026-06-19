@@ -7,7 +7,7 @@
 <meta name="description" content="Practice cold calls against realistic AI buyers. Get scored. Get better.">
 <link rel="icon" href="logo.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="supabase.js"></script>
 <style>
 /* ===== MOBILE-FIRST SOCIAL REDESIGN ===== */
 :root{
@@ -566,7 +566,7 @@ input,textarea,select{font-family:var(--font)}
 
 <script type="module">
 
-import { RetellWebClient } from 'https://esm.sh/retell-client-js-sdk@2.0.7';
+import { RetellWebClient } from './retell.js';
 
 // ===== SUPABASE AUTH =====
 const SB_URL = 'https://xacehhtgvubcqdoltazg.supabase.co';
@@ -990,7 +990,7 @@ const SCENARIOS = [
     card:{ contact:{ name:"Nina Roberts", title:"Chief Learning Officer", company:"Harborview Health System" }, company_snapshot:"Regional health system, 3,200 employees, 6 facilities. Well-funded, community nonprofit.", background:"15 years in healthcare L&D. Has managed 2 prior LMS implementations — one failed, one barely used.", trigger:"Board published a new 5-year strategic plan last month. 'Workforce development' is listed as 1 of 4 board-level pillars.", your_goal:"Get Nina to a platform discovery call with a specific date.", your_angle:"When workforce development becomes a board-level pillar, the CLO will be asked to show a platform strategy — not a wish list, a plan with a vendor." },
     hidden:{ persona_core:{ comms_style:"thoughtful, cautious, has been burned by platform promises before", values:"her team's morale, clinical staff time, not disrupting patient care with poorly adopted tools", baseline_disposition:"skeptical — has implemented 2 platforms before and neither delivered what was promised" }, world_state:[ { fact:"Currently running 4 different point solutions for learning — a legacy LMS, a compliance training vendor, a nursing-specific content library, and ad-hoc LinkedIn Learning licenses", known_to_self:true, gate:"rep asks about their current learning technology landscape or how learning is managed across 6 facilities", reveal_style:"describes the fragmentation with a tired candor" }, { fact:"The board strategic plan mentions workforce development but has no technology component — Nina has been asked to define the platform strategy before Q4", known_to_self:true, gate:"rep asks whether the board has given her a mandate or timeline for the workforce development pillar", reveal_style:"brings it up as her current priority and her current anxiety" } ], objection_stack:[ { rank:1, objection:"We already have an LMS and we've been implementing it for 2 years.", raise_when:"any mention of a new platform", defeat_condition:"rep asks what the adoption rate on the current LMS is among clinical staff — if it's below 60%, the implementation is a sunk cost problem, not a reason to stay", if_unaddressed:"2 years of investment stays the justification for continuing" }, { rank:2, objection:"I can't ask clinical staff to learn another system. They're already overwhelmed.", raise_when:"after first objection", defeat_condition:"rep describes the Degreed approach — it doesn't replace the LMS, it sits above it. Clinical staff use one surface, not four. Nina's compliance content stays where it is.", if_unaddressed:"clinical staff burden is the terminal objection" }, { rank:3, objection:"What's the implementation timeline? I have a Q4 board deadline and I can't be in a 12-month rollout.", raise_when:"if she's engaged", defeat_condition:"rep proposes a discovery call to define the Q4 deliverable first — a board-ready platform strategy document. Implementation is phased after that. She walks away from the call with something she can show the board", if_unaddressed:"timeline risk closes the final door" } ], patience:{ start:30, drains_on:["LXP buzzwords","platform feature lists","anything that sounds like another failed implementation"], recovers_on:["the 4-system fragmentation","the Q4 board deadline","the board strategy document as the Q4 deliverable"], end_call_at:0 }, win_bar:"Nina agrees to a platform discovery call — specific date, with the Q4 board deliverable as the defined output." },
     scoring:{ phases:{ open:{ weight:25, criteria:"Opens with the board strategic plan — connects to her Q4 pressure" }, discovery:{ weight:25, criteria:"Gets the 4-system fragmentation and the Q4 deadline both on the table" }, value:{ weight:15, criteria:"Positions the discovery call as producing a board strategy document by Q4" }, objections:{ weight:20, criteria:"Handles existing LMS investment, clinical staff burden, and implementation timeline" }, close:{ weight:15, criteria:"Books the discovery call with Q4 strategy document as the defined output" } }, cross_cutting:{ talk_ratio:"Under 40%", tone_match:"Thoughtful, healthcare-aware, no LXP buzzwords", fluff_penalty:"-10 for learning tech marketing language" }, outcome:"Nina books the discovery call", feedback_format:"Win/loss + per-phase scores + 2-3 timestamped moments + ONE fix" }
-  }
+  },
   {
     id:"gym", voice:"11labs-Kate",
     meta:{ title:"GymDesk — Iron Works Gym", difficulty:"easy", call_type:"cold_call", industry:"fitness", product:{ name:"GymDesk", one_liner:"Member management, automated billing, and class booking — $49/month, free migration.", category:"Gym Management Software" }, seller:{ company:"GymDesk", title:"Account Executive" } },
@@ -1446,43 +1446,87 @@ window.signOut = async function(){
 // ===== SETTINGS TAB =====
 function renderSettings(){
   const el=document.getElementById('settings-content');
+  const displayName=localStorage.getItem('ss_display_name')||(currentUser?currentUser.email.split('@')[0]:'Rep');
   el.innerHTML=`
-    <div style="font-size:1.1rem;font-weight:800;margin-bottom:14px">Settings</div>
+    <div style="font-size:1.1rem;font-weight:800;margin-bottom:20px">Settings</div>
     <div class="settings-section">
-      <div class="settings-section-title">API Configuration</div>
+      <div class="settings-section-title">Account</div>
       <div class="settings-card">
         <div class="settings-row">
-          <div><div class="settings-row-label">OpenAI API Key</div><div class="settings-row-desc">For scoring and coaching</div></div>
+          <div class="settings-row-label">Name</div>
+          <input type="text" id="display-name-input" value="${esc(displayName)}" placeholder="Your name" style="text-align:right;border:none;outline:none;font-size:0.84rem;background:transparent;color:var(--text2);max-width:160px" onblur="saveDisplayName()">
         </div>
         <div class="settings-row">
-          <div class="api-key-wrap" style="width:100%">
-            <input type="password" class="api-key-input" id="openai-key-input" placeholder="sk-proj-..." value="${localStorage.getItem('custom_openai_key')||''}" style="flex:1">
-            <button class="btn btn-sm btn-ghost" onclick="saveApiKey('openai')">Save</button>
+          <div class="settings-row-label">Email</div>
+          <div style="font-size:0.84rem;color:var(--text3)">${currentUser?currentUser.email:'Not signed in'}</div>
+        </div>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-section-title">Permissions</div>
+      <div class="settings-card">
+        <div class="settings-row" id="mic-row">
+          <div>
+            <div class="settings-row-label">Microphone</div>
+            <div class="settings-row-desc" id="mic-desc">Required for voice calls</div>
           </div>
-        </div>
-        <div class="settings-row">
-          <span class="api-key-status ${localStorage.getItem('custom_openai_key')?'saved':'unsaved'}" id="openai-key-status">${localStorage.getItem('custom_openai_key')?'Saved':'Not set'}</span>
+          <button class="btn btn-sm" id="mic-btn" onclick="requestMic()" style="background:var(--surface2);border:1px solid var(--border);color:var(--text2);font-size:0.78rem">Check</button>
         </div>
       </div>
     </div>
     <div class="settings-section">
-      <div class="settings-section-title">Data</div>
+      <div class="settings-section-title">Account</div>
       <div class="settings-card">
-        <div class="settings-row">
-          <div><div class="settings-row-label">Call History</div><div class="settings-row-desc">${getCallHistory().length} calls recorded</div></div>
-          <button class="btn btn-sm btn-ghost" onclick="clearHistory()">Clear</button>
+        <div class="settings-row" style="cursor:pointer" onclick="signOut()">
+          <div class="settings-row-label" style="color:var(--red)">Sign Out</div>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--red)"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
         </div>
       </div>
     </div>
-    <div class="settings-section">
-      <div class="settings-section-title">About</div>
-      <div class="settings-card">
-        <div class="settings-row">
-          <div><div class="settings-row-label">Sales Sparring</div><div class="settings-row-desc">AI-powered sales call practice. All data stays in your browser.</div></div>
-        </div>
-      </div>
+    <div style="text-align:center;padding:20px 0 8px">
+      <div style="font-size:0.72rem;color:var(--text3)">Sales Sparring · v1.0</div>
     </div>`;
+  checkMicStatus();
 }
+
+async function checkMicStatus(){
+  try {
+    const result = await navigator.permissions.query({name:'microphone'});
+    updateMicUI(result.state);
+    result.onchange = () => updateMicUI(result.state);
+  } catch(e) { /* permissions API not available, leave as Check */ }
+}
+
+function updateMicUI(state){
+  const btn=document.getElementById('mic-btn');
+  const desc=document.getElementById('mic-desc');
+  if(!btn||!desc) return;
+  if(state==='granted'){
+    btn.textContent='Enabled'; btn.style.background='#f0fff4'; btn.style.borderColor='#9ae6b4'; btn.style.color='#38a169';
+    desc.textContent='Microphone access granted';
+  } else if(state==='denied'){
+    btn.textContent='Denied'; btn.style.background='#fff5f5'; btn.style.borderColor='#feb2b2'; btn.style.color='var(--red)';
+    desc.textContent='Enable in your device Settings app';
+  } else {
+    btn.textContent='Allow'; btn.style.background='var(--accent-light)'; btn.style.borderColor='var(--accent-border)'; btn.style.color='var(--accent)';
+    desc.textContent='Tap to allow microphone access';
+  }
+}
+
+window.requestMic = async function(){
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
+    stream.getTracks().forEach(t=>t.stop());
+    updateMicUI('granted');
+  } catch(e) {
+    updateMicUI('denied');
+  }
+};
+
+window.saveDisplayName = function(){
+  const val=document.getElementById('display-name-input').value.trim();
+  if(val) localStorage.setItem('ss_display_name',val);
+};
 
 window.saveApiKey = function(type){
   if(type==='openai'){
