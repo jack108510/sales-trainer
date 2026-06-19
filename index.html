@@ -464,11 +464,14 @@ input,textarea,select{font-family:var(--font)}
     <!-- Call UI (full screen, hidden) -->
     <div id="call-screen" class="call-screen">
       <div class="call-screen-header">
-        <div class="cs-status">
-          <div class="cs-dot"></div>
-          <span class="cs-label">Live</span>
-          <img id="call-buyer-avatar" src="" alt="" style="width:20px;height:20px;border-radius:50%;display:none">
-          <span class="cs-buyer" id="call-buyer-name"></span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <button onclick="endCall()" style="background:none;border:none;color:var(--text2);padding:4px;cursor:pointer;display:flex;align-items:center;gap:4px;font-size:0.78rem;font-weight:600"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><polyline points="15 18 9 12 15 6"/></svg>Back</button>
+          <div class="cs-status">
+            <div class="cs-dot"></div>
+            <span class="cs-label">Live</span>
+            <img id="call-buyer-avatar" src="" alt="" style="width:20px;height:20px;border-radius:50%;display:none">
+            <span class="cs-buyer" id="call-buyer-name"></span>
+          </div>
         </div>
         <div class="cs-meta">
           <div class="cs-timer" id="call-timer">00:00</div>
@@ -1849,7 +1852,13 @@ function endCallView(){
   inCallView=false;
   document.getElementById('call-screen').classList.remove('active');
   document.getElementById('bottom-nav').classList.remove('inactive');
-  showPracticeMain();
+  // Return to scenario detail if one is loaded, otherwise practice main
+  if(currentScenario){
+    document.getElementById('practice-main-view').style.display='none';
+    document.getElementById('scenario-detail-view').style.display='block';
+  } else {
+    showPracticeMain();
+  }
 }
 
 window.endCall = function(){
