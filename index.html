@@ -1622,29 +1622,50 @@ window.endCall = function(){
 async function gradeCall(scenario,transcript,duration){
   const transcriptText=transcript.map(t=>(t.role==='buyer'?'BUYER: ':'SELLER: ')+t.text).join('\n');
   const scenarioCtx=`Product: ${scenario.meta.product.name} (${scenario.meta.product.one_liner}) from ${scenario.meta.seller.company}\nRep role: ${scenario.meta.seller.title}\nProspect: ${scenario.card.contact.name}, ${scenario.card.contact.title} at ${scenario.card.contact.company}\nCompany: ${scenario.card.company_snapshot}\nBackground: ${scenario.card.background}\nTrigger: ${scenario.card.trigger}\nGoal: ${scenario.card.your_goal}\nAngle: ${scenario.card.your_angle}\nBuyer persona: ${scenario.hidden.persona_core.comms_style} — ${scenario.hidden.persona_core.baseline_disposition}\nHidden pain: ${scenario.hidden.world_state.map(w=>w.fact).join('; ')}\nObjections: ${scenario.hidden.objection_stack.map(o=>o.objection).join(' | ')}\nWin bar: ${scenario.hidden.win_bar}`;
-  const prompt=`You are a VP of Sales reviewing a rep's cold call recording. Grade this call.
+  const phases=scenario.scoring?.phases||{};
+  const winBar=scenario.hidden.win_bar;
+  const worldFacts=scenario.hidden.world_state.map(w=>`- "${w.fact}" (revealed when: ${w.gate})`).join('\n');
+  const objections=scenario.hidden.objection_stack.map(o=>`- Rank ${o.rank}: "${o.objection}" — defeated by: ${o.defeat_condition}`).join('\n');
+
+  const prompt=`You are a sales coach grading a cold-call practice transcript. You can see the buyer's hidden state, which the rep could not. Grade what the rep actually did.
 
 SCENARIO:
 ${scenarioCtx}
+
+HIDDEN FACTS THE REP NEEDED TO UNCOVER:
+${worldFacts}
+
+OBJECTIONS IN PLAY:
+${objections}
+
+WIN BAR (what it took to get a yes):
+${winBar}
 
 FULL TRANSCRIPT:
 ${transcriptText}
 
 CALL DURATION: ${duration}
 
-Grade on 6 criteria (1-5 each). For each: score, feedback (2-3 sentences with quotes), better (exact replacement phrase).
+Score each phase 0-5 (integer). For each provide: score, feedback (2-3 sentences with exact transcript quotes), better (the exact phrase the rep should have said instead at the weakest moment).
 
-OPENING (15pts): Pattern interrupt vs generic? Hook in first 15 seconds? Score 5 = buyer curious. Score 1 = wants to hang up.
-DISCOVERY (25pts): Open-ended questions? SPIN methodology? Talk-to-listen ratio 30/40% seller? Each question builds on last answer?
-OBJECTION HANDLING (20pts): LAER method? Not defensive? Isolated the objection? Reframed as opportunity?
-VALUE COMMUNICATION (15pts): Feature-Advantage-Benefit? Tied to specific pain? Social proof? Numbers and specifics?
-CLOSING (15pts): Specific next step with date/time? Created urgency? Summarized value before asking?
-RULES (10pts): Followed constraints? Within pricing? Honest about capabilities?
+OPENING (weight ${phases.open?.weight||25}%): ${phases.open?.criteria||'Earned ~20s with a pattern interrupt or permission ask; no filler opener.'}
+DISCOVERY (weight ${phases.discovery?.weight||25}%): ${phases.discovery?.criteria||'Uncovered hidden facts by ASKING; open questions; followed up on answers.'}
+VALUE (weight ${phases.value?.weight||15}%): ${phases.value?.criteria||'Tied product to specific situation uncovered, not a feature list.'}
+OBJECTIONS (weight ${phases.objections?.weight||20}%): ${phases.objections?.criteria||'Handled objections with acknowledge → address → confirm, not defensively.'}
+CLOSE (weight ${phases.close?.weight||15}%): ${phases.close?.criteria||'Asked for a specific commitment with a real next step and date.'}
+RULES/WIN_BAR (10%): Did the rep meet the win bar exactly as stated? Score 5 = yes and cleanly. Score 1 = called it a win but missed the bar.
 
-Also: overall_feedback (3-4 sentences), best_moment (quote), worst_moment (quote what they said and what they should've said), grade letter.
+OUTCOME: Was the win bar met? Yes or no — based on the exact conditions in the win bar, not a vague "they agreed to something."
+
+CROSS-CUTTING:
+- Talk ratio: did the rep speak less than 50% of the time?
+- Tone match: did the rep adapt to the buyer's communication style?
+- Fluff penalty: deduct for buzzwords, over-apologizing, rambling, filler openers
+
+Also provide: overall_feedback (3-4 sentences, specific), best_moment (exact quote from rep that worked), worst_moment (exact quote + what they should have said), next_call (ONE single fix that would most improve the next attempt), grade letter.
 
 JSON only:
-{"opening":{"score":4,"feedback":"...","better":"..."},"discovery":{"score":3,"feedback":"...","better":"..."},"objection_handling":{"score":4,"feedback":"...","better":"..."},"value_comm":{"score":3,"feedback":"...","better":"..."},"closing":{"score":2,"feedback":"...","better":"..."},"rules":{"score":5,"feedback":"...","better":"..."},"overall_feedback":"...","best_moment":"...","worst_moment":"...","grade":"B"}`;
+{"opening":{"score":4,"feedback":"...","better":"..."},"discovery":{"score":3,"feedback":"...","better":"..."},"objection_handling":{"score":4,"feedback":"...","better":"..."},"value_comm":{"score":3,"feedback":"...","better":"..."},"closing":{"score":2,"feedback":"...","better":"..."},"rules":{"score":5,"feedback":"...","better":"..."},"outcome":"win","overall_feedback":"...","best_moment":"...","worst_moment":"...","next_call":"...","grade":"B"}`;
 
   try{
     const key=localStorage.getItem('custom_openai_key')||OPENAI_KEY;
@@ -1765,9 +1786,11 @@ function showScorecard(scores,scenario,duration,isNewBest,totalPts,prevBest){
 
       <div class="ae-fb" id="afb">
         <div class="ae-fb-hdr">AI Analysis</div>
+        ${scores.outcome?`<div style="margin-bottom:12px;display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border-radius:20px;font-size:0.64rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;${scores.outcome==='win'?'background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.3);color:#34d399':'background:rgba(248,113,113,0.12);border:1px solid rgba(248,113,113,0.3);color:#f87171'}"><span>${scores.outcome==='win'?'✓ Win Bar Met':'✗ Win Bar Missed'}</span></div>`:''}
         <div class="ae-fb-txt" id="aft"></div>
         ${scores.best_moment?`<div style="margin-top:14px;padding:10px 14px;background:rgba(52,211,153,0.08);border:1px solid rgba(52,211,153,0.15);border-radius:8px"><div style="font-size:0.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#34d399;margin-bottom:4px">Best Moment</div><div style="font-size:0.74rem;color:rgba(255,255,255,0.8);line-height:1.45">${esc(scores.best_moment)}</div></div>`:''}
         ${scores.worst_moment?`<div style="margin-top:8px;padding:10px 14px;background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.15);border-radius:8px"><div style="font-size:0.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#f87171;margin-bottom:4px">Biggest Miss</div><div style="font-size:0.74rem;color:rgba(255,255,255,0.8);line-height:1.45">${esc(scores.worst_moment)}</div></div>`:''}
+        ${scores.next_call?`<div style="margin-top:8px;padding:10px 14px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.2);border-radius:8px"><div style="font-size:0.52rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#fbbf24;margin-bottom:4px">Next Call Fix</div><div style="font-size:0.74rem;color:rgba(255,255,255,0.8);line-height:1.45">${esc(scores.next_call)}</div></div>`:''}
       </div>
 
       <div class="ae-btns" id="abn">
