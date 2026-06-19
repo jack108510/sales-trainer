@@ -114,6 +114,16 @@ input,textarea,select{font-family:var(--font)}
 .feed-card-diff.easy{background:#c6f6d5;color:#22543d}
 .feed-card-diff.medium{background:#fefcbf;color:#744210}
 .feed-card-diff.hard{background:#fed7d7;color:#742a2a}
+.diff-picker{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:0 20px;margin-bottom:4px}
+.diff-tile{border-radius:12px;padding:14px 10px;text-align:center;cursor:pointer;font-family:inherit;transition:all .15s;border:1.5px solid transparent}
+.diff-tile[data-diff="easy"]{background:#f0fff4;border-color:#c6f6d5}
+.diff-tile[data-diff="easy"].active{background:#c6f6d5;border-color:#9ae6b4}
+.diff-tile[data-diff="medium"]{background:#fffff0;border-color:#fefcbf}
+.diff-tile[data-diff="medium"].active{background:#fefcbf;border-color:#f6e05e}
+.diff-tile[data-diff="hard"]{background:#fff5f5;border-color:#fed7d7}
+.diff-tile[data-diff="hard"].active{background:#fed7d7;border-color:#fc8181}
+.diff-tile-name{font-size:0.82rem;font-weight:800}
+.diff-tile-desc{font-size:0.65rem;color:#718096;margin-top:3px;line-height:1.3}
 .feed-card-score{margin-left:auto;font-size:0.72rem;color:var(--accent);font-weight:600;flex-shrink:0}
 
 /* ===== SCENARIO DETAIL ===== */
@@ -421,7 +431,22 @@ input,textarea,select{font-family:var(--font)}
         </div>
       </div>
       <div id="daily-challenge" class="daily-card"></div>
-      <div class="feed-label">Pick a Scenario</div>
+      <div class="feed-label">Pick a Difficulty</div>
+      <div class="diff-picker" id="diff-picker">
+        <button class="diff-tile active" data-diff="easy" onclick="setDifficulty('easy')">
+          <div class="diff-tile-name">Easy</div>
+          <div class="diff-tile-desc">Warm prospects, common objections</div>
+        </button>
+        <button class="diff-tile" data-diff="medium" onclick="setDifficulty('medium')">
+          <div class="diff-tile-name">Medium</div>
+          <div class="diff-tile-desc">Skeptical buyers, tighter close</div>
+        </button>
+        <button class="diff-tile" data-diff="hard" onclick="setDifficulty('hard')">
+          <div class="diff-tile-name">Hard</div>
+          <div class="diff-tile-desc">Resistant buyers, complex deals</div>
+        </button>
+      </div>
+      <div class="feed-label" id="scenario-feed-label" style="margin-top:16px">Easy Scenarios</div>
       <div class="feed" id="scenario-feed"></div>
     </div>
 
@@ -626,6 +651,7 @@ let youTalkSeconds = 0;
 let buyerTalkSeconds = 0;
 let currentSpeaker = null;
 let currentScenario = null;
+let activeDifficulty = 'easy';
 let coachingInterval = null;
 let lastCoachingLength = 0;
 let liveScores = null;
@@ -803,10 +829,21 @@ function renderDailyChallenge(){
   `;
 }
 
+window.setDifficulty = function(diff){
+  activeDifficulty = diff;
+  document.querySelectorAll('.diff-tile').forEach(btn=>{
+    btn.classList.toggle('active', btn.dataset.diff===diff);
+  });
+  const label = document.getElementById('scenario-feed-label');
+  if(label) label.textContent = diff.charAt(0).toUpperCase()+diff.slice(1)+' Scenarios';
+  renderScenarioFeed();
+};
+
 function renderScenarioFeed(){
   const feed=document.getElementById('scenario-feed');
   if(!feed) return;
-  feed.innerHTML=SCENARIOS.map(s=>{
+  const filtered=SCENARIOS.filter(s=>s.difficulty===activeDifficulty);
+  feed.innerHTML=filtered.map(s=>{
     const best=getScenarioBestScore(s.id);
     return `<div class="feed-card" onclick="selectScenario('${s.id}')">
       <div class="feed-card-avatar">
@@ -815,9 +852,6 @@ function renderScenarioFeed(){
       <div class="feed-card-body">
         <div class="feed-card-product">${esc(s.productName||s.product)}</div>
         <div class="feed-card-company">${esc(s.company)} &middot; ${esc(s.buyer.split(',')[0])}</div>
-        <div class="feed-card-meta">
-          <span class="feed-card-diff ${s.difficulty}">${s.difficulty}</span>
-        </div>
       </div>
       ${best!==null?`<div class="feed-card-score">${best}/100</div>`:''}
     </div>`;
