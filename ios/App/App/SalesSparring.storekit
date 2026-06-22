@@ -9,12 +9,44 @@
       "internalID" : "64B7A9D2-9B5E-4C9E-B5A3-1F0E2D3C4B5A",
       "localizations" : [
         {
-          "description" : "Unlimited access to all Sales Sparring practice scenarios.",
-          "displayName" : "Sales Sparring Pro",
+          "description" : "Access to all Easy and Intermediate Sales Sparring scenarios.",
+          "displayName" : "Sales Sparring Plan",
           "locale" : "en_US"
         }
       ],
-      "productID" : "com.salessparring.app.monthly",
+      "productID" : "salessparringpro",
+      "recurringSubscriptionPeriod" : "P1M",
+      "subscriptionGroupID" : "sales-sparring-pro",
+      "type" : "RecurringSubscription"
+    },
+    {
+      "familyShareable" : false,
+      "groupIdentifier" : "sales-sparring-pro",
+      "internalID" : "74C8B0E3-AC6F-5D0F-C6B4-2G1F3E4D5C6B",
+      "localizations" : [
+        {
+          "description" : "Access to all Sales Sparring scenarios including Expert difficulty.",
+          "displayName" : "Sales Sparring Premium",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "SalesSparringPremium.Plan",
+      "recurringSubscriptionPeriod" : "P1M",
+      "subscriptionGroupID" : "sales-sparring-pro",
+      "type" : "RecurringSubscription"
+    },
+    {
+      "familyShareable" : false,
+      "groupIdentifier" : "sales-sparring-pro",
+      "internalID" : "84D9C1F4-BD7G-6E1G-D7C5-3H2G4F5E6D7C",
+      "localizations" : [
+        {
+          "description" : "Full unlimited access to all Sales Sparring scenarios and features.",
+          "displayName" : "Sales Sparring Max",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "Salessparringmax",
       "recurringSubscriptionPeriod" : "P1M",
       "subscriptionGroupID" : "sales-sparring-pro",
       "type" : "RecurringSubscription"

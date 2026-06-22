@@ -420,24 +420,45 @@ input,textarea,select{font-family:var(--font)}
 
 <!-- Paywall Screen -->
 <div id="paywall-screen" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:1000;overflow-y:auto">
-  <div style="max-width:400px;margin:0 auto;padding:60px 24px 40px;text-align:center">
-    <img src="logo.png" alt="Sales Sparring" style="height:72px;margin-bottom:24px">
-    <h1 style="font-size:1.6rem;font-weight:900;letter-spacing:-0.03em;margin-bottom:8px">Unlock Sales Sparring</h1>
-    <p style="font-size:0.9rem;color:var(--text2);margin-bottom:32px;line-height:1.6">Practice cold calls against realistic AI buyers. Get scored. Close more deals.</p>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:20px;margin-bottom:24px;text-align:left">
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><span style="font-size:1.2rem">🎯</span><span style="font-size:0.88rem;font-weight:600">47 real-world cold call scenarios</span></div>
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><span style="font-size:1.2rem">🤖</span><span style="font-size:0.88rem;font-weight:600">AI buyer who pushes back like a real prospect</span></div>
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px"><span style="font-size:1.2rem">📊</span><span style="font-size:0.88rem;font-weight:600">Scored feedback after every call</span></div>
-      <div style="display:flex;align-items:center;gap:12px"><span style="font-size:1.2rem">🔥</span><span style="font-size:0.88rem;font-weight:600">Track streaks and improvement over time</span></div>
+  <div style="max-width:420px;margin:0 auto;padding:52px 20px 40px;text-align:center">
+    <img src="logo.png" alt="Sales Sparring" style="height:64px;margin-bottom:16px">
+    <h1 style="font-size:1.5rem;font-weight:900;letter-spacing:-0.03em;margin-bottom:8px">Choose Your Plan</h1>
+    <p style="font-size:0.86rem;color:var(--text2);margin-bottom:28px;line-height:1.6">Practice cold calls against AI buyers. Get scored. Close more deals.</p>
+
+    <!-- Plan cards -->
+    <div id="paywall-plans" style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;text-align:left">
+
+      <div class="plan-card" data-product="salessparringpro" onclick="selectPlan(this)" style="border:2px solid var(--border);border-radius:var(--radius-lg);padding:16px;cursor:pointer;background:var(--surface);transition:border-color .15s">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div style="font-size:0.95rem;font-weight:800">Plan</div>
+          <div style="font-size:1rem;font-weight:900;color:var(--accent)">$19.99<span style="font-size:0.72rem;font-weight:500;color:var(--text3)">/mo</span></div>
+        </div>
+        <div style="font-size:0.78rem;color:var(--text2)">Easy &amp; Intermediate scenarios · Score tracking · Daily challenges</div>
+      </div>
+
+      <div class="plan-card selected" data-product="SalesSparringPremium.Plan" onclick="selectPlan(this)" style="border:2px solid var(--accent);border-radius:var(--radius-lg);padding:16px;cursor:pointer;background:var(--accent-light);transition:border-color .15s;position:relative">
+        <div style="position:absolute;top:-10px;left:16px;background:var(--accent);color:#fff;font-size:0.65rem;font-weight:800;padding:3px 10px;border-radius:20px;letter-spacing:.04em">MOST POPULAR</div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div style="font-size:0.95rem;font-weight:800">Premium</div>
+          <div style="font-size:1rem;font-weight:900;color:var(--accent)">$29.99<span style="font-size:0.72rem;font-weight:500;color:var(--text3)">/mo</span></div>
+        </div>
+        <div style="font-size:0.78rem;color:var(--text2)">All scenarios including Expert · Everything in Plan</div>
+      </div>
+
+      <div class="plan-card" data-product="Salessparringmax" onclick="selectPlan(this)" style="border:2px solid var(--border);border-radius:var(--radius-lg);padding:16px;cursor:pointer;background:var(--surface);transition:border-color .15s">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+          <div style="font-size:0.95rem;font-weight:800">Max</div>
+          <div style="font-size:1rem;font-weight:900;color:var(--accent)">$39.99<span style="font-size:0.72rem;font-weight:500;color:var(--text3)">/mo</span></div>
+        </div>
+        <div style="font-size:0.78rem;color:var(--text2)">Everything in Premium · Priority features &amp; new scenarios first</div>
+      </div>
+
     </div>
-    <div style="margin-bottom:8px">
-      <div id="paywall-price" style="font-size:2rem;font-weight:900;letter-spacing:-0.04em">$19.99<span style="font-size:1rem;font-weight:500;color:var(--text3)">/month</span></div>
-      <div style="font-size:0.78rem;color:var(--text3);margin-top:4px">Cancel anytime</div>
-    </div>
-    <button onclick="startPurchase()" id="paywall-btn" class="btn btn-primary btn-full" style="padding:16px;font-size:1rem;font-weight:800;margin-top:16px;border-radius:var(--radius-lg)">Subscribe Now</button>
+
+    <button onclick="startPurchase()" id="paywall-btn" class="btn btn-primary btn-full" style="padding:16px;font-size:1rem;font-weight:800;border-radius:var(--radius-lg)">Subscribe Now</button>
     <button onclick="restorePurchases()" style="background:none;border:none;color:var(--text3);font-size:0.8rem;margin-top:14px;text-decoration:underline;cursor:pointer">Restore Purchase</button>
     <div id="paywall-error" style="display:none;margin-top:14px;font-size:0.8rem;color:var(--red)"></div>
-    <div style="margin-top:20px;font-size:0.72rem;color:var(--text3);line-height:1.6">
+    <div style="margin-top:20px;font-size:0.7rem;color:var(--text3);line-height:1.6">
       Payment processed by Apple. Subscription auto-renews monthly unless cancelled at least 24 hours before the end of the billing period.
     </div>
   </div>
@@ -678,6 +699,20 @@ async function checkSubscription(){
   }
 }
 
+let selectedPlanID = 'SalesSparringPremium.Plan';
+
+function selectPlan(el){
+  document.querySelectorAll('.plan-card').forEach(c => {
+    c.style.borderColor = 'var(--border)';
+    c.style.background = 'var(--surface)';
+    c.classList.remove('selected');
+  });
+  el.style.borderColor = 'var(--accent)';
+  el.style.background = 'var(--accent-light)';
+  el.classList.add('selected');
+  selectedPlanID = el.dataset.product;
+}
+
 async function startPurchase(){
   const btn = document.getElementById('paywall-btn');
   const errEl = document.getElementById('paywall-error');
@@ -685,7 +720,7 @@ async function startPurchase(){
   btn.disabled = true;
   errEl.style.display = 'none';
   try {
-    const result = await window.Capacitor.Plugins.IAPPlugin.purchase();
+    const result = await window.Capacitor.Plugins.IAPPlugin.purchase({ productID: selectedPlanID });
     if(result && result.success){
       document.getElementById('paywall-screen').style.display = 'none';
       document.getElementById('app-shell').style.display = 'block';

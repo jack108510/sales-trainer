@@ -5,10 +5,23 @@ import StoreKit
 class StoreKitManager: ObservableObject {
     static let shared = StoreKitManager()
 
-    static let monthlyProductID = "com.salessparring.app.monthly"
+    // Product IDs matching App Store Connect
+    static let productIDs = [
+        "salessparringpro",
+        "SalesSparringPremium.Plan",
+        "Salessparringmax"
+    ]
+
+    enum Tier: String {
+        case plan    = "salessparringpro"
+        case premium = "SalesSparringPremium.Plan"
+        case max     = "Salessparringmax"
+        case none    = ""
+    }
 
     @Published var isSubscribed: Bool = false
-    @Published var product: Product? = nil
+    @Published var activeTier: Tier = .none
+    @Published var products: [Product] = []
 
     private var transactionListener: Task<Void, Error>?
 
@@ -23,8 +36,8 @@ class StoreKitManager: ObservableObject {
 
     // MARK: - Public
 
-    func purchase() async throws -> Bool {
-        guard let product = product else { return false }
+    func purchase(productID: String) async throws -> Bool {
+        guard let product = products.first(where: { $0.id == productID }) else { return false }
         let result = try await product.purchase()
         switch result {
         case .success(let verification):
@@ -55,8 +68,11 @@ class StoreKitManager: ObservableObject {
 
     private func loadProducts() async {
         do {
-            let products = try await Product.products(for: [Self.monthlyProductID])
-            self.product = products.first
+            let loaded = try await Product.products(for: Self.productIDs)
+            self.products = loaded.sorted { a, b in
+                let order = Self.productIDs
+                return (order.firstIndex(of: a.id) ?? 0) < (order.firstIndex(of: b.id) ?? 0)
+            }
         } catch {
             print("[StoreKit] Failed to load products: \(error)")
         }
@@ -65,13 +81,15 @@ class StoreKitManager: ObservableObject {
     private func checkEntitlements() async {
         for await result in Transaction.currentEntitlements {
             if case .verified(let transaction) = result,
-               transaction.productID == Self.monthlyProductID,
-               transaction.revocationDate == nil {
+               transaction.revocationDate == nil,
+               let tier = Tier(rawValue: transaction.productID) {
+                activeTier = tier
                 isSubscribed = true
                 return
             }
         }
         isSubscribed = false
+        activeTier = .none
     }
 
     private func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
