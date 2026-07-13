@@ -10,6 +10,8 @@
 <meta property="og:title" content="Sales Sparring — AI Sales Call Practice">
 <meta property="og:description" content="Practice cold calls against realistic AI buyers. Get scored. Handle objections better. Close more deals.">
 <meta property="og:image" content="https://salessparring.ca/og.png">
+<link rel="icon" type="image/png" href="sales-sparring-logo.png">
+<link rel="apple-touch-icon" href="sales-sparring-logo.png">
 <meta property="og:site_name" content="Sales Sparring">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Sales Sparring — AI Sales Call Practice">
@@ -68,8 +70,8 @@ button{font-family:var(--font);cursor:pointer;border:none;background:none}
 .nav{position:sticky;top:0;z-index:100;background:rgba(255,255,255,.95);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
 .nav-inner{display:flex;align-items:center;height:60px;gap:20px}
 .wordmark{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.wm-mark{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;background:var(--accent);color:#fff;font-size:.75rem;font-weight:900;letter-spacing:-.5px;border-radius:9px}
-.wm-text{font-size:1rem;font-weight:700;color:var(--text);letter-spacing:-.3px}
+.brand-logo{width:38px;height:38px;border-radius:10px;object-fit:cover;box-shadow:0 2px 8px rgba(0,33,77,.14)}
+.wm-text{font-size:1rem;font-weight:800;color:var(--text);letter-spacing:-.3px}
 .nav-links{display:none;align-items:center;gap:28px;margin-left:auto}
 .nav-links a{font-size:.9rem;font-weight:500;color:var(--text2);transition:color .15s}
 .nav-links a:hover{color:var(--text)}
@@ -207,7 +209,7 @@ footer{background:var(--dark);color:#fff;padding:52px 0 32px}
   <div class="container">
     <div class="nav-inner">
       <a href="/" class="wordmark" aria-label="Sales Sparring home">
-        <span class="wm-mark">SS</span>
+        <img class="brand-logo" src="sales-sparring-logo.png" alt="Sales Sparring logo">
         <span class="wm-text">Sales Sparring</span>
       </a>
       <nav class="nav-links" aria-label="Site navigation">
@@ -531,7 +533,7 @@ footer{background:var(--dark);color:#fff;padding:52px 0 32px}
     <div class="footer-inner">
       <div class="footer-brand">
         <a href="/" class="wordmark" aria-label="Sales Sparring home">
-          <span class="wm-mark">SS</span>
+          <img class="brand-logo" src="sales-sparring-logo.png" alt="Sales Sparring logo">
           <span class="wm-text" style="color:#e2e8f0">Sales Sparring</span>
         </a>
         <p>AI-powered sales call practice for reps and founders who want to close more.</p>
